@@ -29,19 +29,42 @@
                 <label class="form-label">Due Date *</label>
                 <input type="date" class="form-input" required>
                 <label class="form-label">Due Time</label>
-                <input type="time" class="form-input">
+                <input type="time" class="form-input1">
                 <label class="form-label">Priority Level *</label>
-                <select class="form-input">
+                <select class="form-input1">
                     <option>Low Priority</option>
                     <option>Medium Priority</option>
                     <option>High Priority</option>
                 </select>
                 <label class="form-label">Estimated Hours</label>
-                <input type="number" placeholder="54" class="form-input">
-                <input type="url" placeholder="Project URL" class="form-input">
-                <textarea placeholder="Task Description" class="form-input form-textarea"></textarea>
-                <div class="form-label">Task Progress</div>
-                <div class="progress-bar"><div class="progress-fill"></div></div>
+                <input type="number" placeholder="54" class="form-input1">
+                <input type="url" placeholder="Project URL" class="form-input1">
+                <textarea placeholder="Task Description" class="form-input1 form-textarea"></textarea>
+                <label class="form-label">Task Progress</label>
+                <input type="range" min="0" max="100" value="0" class="progress-slider" title="Drag to change progress">
+                <div class="progressText">0%</div>
+                <label class="form-label">Task Color</label>
+                <input type="color" class="form-input-color">
+                <label class="form-label">Task Type</label>
+                <div class="task-type">
+                    <label><input type="checkbox"> Bug Fix</label>
+                    <label><input type="checkbox"> Feature</label>
+                    <label><input type="checkbox"> Enhancement</label>
+                </div>
+                <label class="form-label">Status</label>
+                <div class="task-status">
+                    <label><input type="radio" name="status" checked> Pending</label>
+                    <label><input type="radio" name="status"> In Progress</label>
+                    <label><input type="radio" name="status"> Completed</label>
+                </div>
+                <div class="file-upload">
+                    <p>📎 Click to upload attachments</p>
+                    <small>Supported: PDF, DOC, Images</small>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="create-btn">✓ Create Task</button>
+                    <button type="reset" class="reset-btn">✗ Reset</button>
+                </div>
             </form>
         </section>
         <section class="card active-tasks">
@@ -57,10 +80,10 @@
             <div class="tasks-grid">
                 <div class="task-card">
                     <h3 class="task-title">Design Homepage Mockup</h3>
-                    <p class="task-description">Create wireframes and high-fidelity mockups for the new homepage redesign project with modern UI elements.</p>
+                    <p class="task-description">Create wireframes and high-fidelity mockups for the new homepage redesign project.</p>
                     <div class="task-meta">
-                        <div class="meta-item"><span class="icon-small">📅</span>Due: Oct 20, 2025</div>
-                        <div class="meta-item"><span class="icon-small">👤</span>Sarah Johnson</div>
+                        <div class="meta-item">📅 Due: Oct 20, 2025</div>
+                        <div class="meta-item">👤 Sarah Johnson</div>
                     </div>
                     <div class="task-footer">
                         <span class="badge badge-high">● HIGH</span>
@@ -71,41 +94,103 @@
                     <h3 class="task-title">Fix Login Authentication Bug</h3>
                     <p class="task-description">Resolve the issue where users are logged out unexpectedly after 5 minutes of inactivity.</p>
                     <div class="task-meta">
-                        <div class="meta-item"><span class="icon-small">📅</span>Due: Oct 15, 2025</div>
-                        <div class="meta-item"><span class="icon-small">👤</span>Michael Chen</div>
+                        <div class="meta-item">📅 Due: Oct 15, 2025</div>
+                        <div class="meta-item">👤 Michael Chen</div>
                     </div>
                     <div class="task-footer">
                         <span class="badge badge-high">● HIGH</span>
-                        <span class="badge badge-pending">● Pending</span>
+                        <span class="badge badge-progress">● Pending</span>
                     </div>
                 </div>
                 <div class="task-card">
                     <h3 class="task-title">Update Documentation</h3>
                     <p class="task-description">Review and update the API documentation with the latest endpoint changes and examples.</p>
                     <div class="task-meta">
-                        <div class="meta-item"><span class="icon-small">📅</span>Due: Oct 25, 2025</div>
-                        <div class="meta-item"><span class="icon-small">👤</span>Emily Rodriguez</div>
+                        <div class="meta-item">📅 Due: Oct 25, 2025</div>
+                        <div class="meta-item">👤 Emily Rodriguez</div>
                     </div>
                     <div class="task-footer">
                         <span class="badge badge-medium">● MEDIUM</span>
-                        <span class="badge badge-progress">● In Progress</span>
+                        <span class="badge badge-completed">● Completed</span>
                     </div>
                 </div>
                 <div class="task-card">
                     <h3 class="task-title">Database Performance Optimization</h3>
                     <p class="task-description">Analyze and optimize slow-running queries to improve overall database performance by 30%.</p>
                     <div class="task-meta">
-                        <div class="meta-item"><span class="icon-small">📅</span>Due: Oct 30, 2025</div>
-                        <div class="meta-item"><span class="icon-small">👤</span>David Kim</div>
+                        <div class="meta-item">📅 Due: Oct 30, 2025</div>
+                        <div class="meta-item">👤 David Kim</div>
                     </div>
                     <div class="task-footer">
                         <span class="badge badge-medium">● MEDIUM</span>
-                        <span class="badge badge-pending">● Pending</span>
+                        <span class="badge badge-progress">● Pending</span>
+                    </div>
+                </div>
+                <div class="task-card">
+                    <h3 class="task-title">Implement Dark Mode</h3>
+                    <p class="task-description">Add dark mode theme support across the application with user preference persistence.</p>
+                    <div class="task-meta">
+                        <div class="meta-item">📅 Due: Nov 05, 2025</div>
+                        <div class="meta-item">👤 Alex Thompson</div>
+                    </div>
+                    <div class="task-footer">
+                        <span class="badge badge-low" >● LOW</span>
+                        <span class="badge badge-progress">● Pending</span>
+                    </div>
+                </div>
+                <div class="task-card">
+                    <h3 class="task-title">User Testing Session</h3>
+                    <p class="task-description">Conduct user testing sessions with 10 participants to gather feedback on the new interface.</p>
+                    <div class="task-meta">
+                        <div class="meta-item">📅 Due: Oct 28, 2025</div>
+                        <div class="meta-item">👤 Lisa Anderson</div>
+                    </div>
+                    <div class="task-footer">
+                        <span class="badge badge-high">● HIGH</span>
+                        <span class="badge badge-completed">● Completed</span>
                     </div>
                 </div>
             </div>
         </section>
     </div>
 </main>
+<footer class="footer">
+    <div class="footer-grid">
+        <div>
+            <h3>TaskManager</h3>
+            <p>Organize your work and life, finally.</p>
+        </div>
+        <div>
+            <h4>Features</h4>
+            <ul>
+                <li>Task Management</li>
+                <li>Team Collaboration</li>
+                <li>Analytics</li>
+                <li>Integrations</li>
+            </ul>
+        </div>
+        <div>
+            <h4>Resources</h4>
+            <ul>
+                <li>Documentation</li>
+                <li>Tutorials</li>
+                <li>API Reference</li>
+                <li>Support</li>
+            </ul>
+        </div>
+        <div>
+            <h4>Company</h4>
+            <ul>
+                <li>About Us</li>
+                <li>Careers</li>
+                <li>Privacy Policy</li>
+                <li>Terms of Service</li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        © 2025 TaskManager. All rights reserved. Built with ❤️ for productivity.
+    </div>
+</footer>
 </body>
 </html>

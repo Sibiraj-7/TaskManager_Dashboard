@@ -49,8 +49,7 @@ body {
     font-size: 0.95rem;
     transition: color 0.2s;
 }
-.nav-link:hover,
-.nav-link.active {
+.nav-link:hover, .nav-link.active {
     color: #6366f1;
 }
 .main-content {
@@ -237,6 +236,9 @@ select.form-input {
 .badge-progress {
     color: #2563eb;
 }
+.badge-pending {
+    color: #eb9525;
+}
 @media (max-width: 1200px) {
     .dashboard-grid,
     .tasks-grid {
@@ -270,8 +272,12 @@ select.form-input {
 }
 .task-type, .task-status {
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
     font-size: 0.9rem;
+}
+.task-type label, .task-status label{
+    width: 110px;
 }
 .file-upload {
     border: 2px dashed #d1d5db;

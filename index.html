@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>TaskManager</title>
-        <link rel="stylesheet" href="style.css">
-    </head>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaskManager</title>
+<link rel="stylesheet" href="style.css">
+</head>
 <body>
 <header class="header">
   <div class="logo">
@@ -27,18 +27,26 @@
             <form class="task-form">
                 <input type="text" placeholder="Task Name *" class="form-input" required>
                 <input type="email" placeholder="Assignee Email *" class="form-input" required>
-                <label class="form-label">Due Date *</label>
-                <input type="date" class="form-input" required>
-                <label class="form-label">Due Time</label>
-                <input type="time" class="form-input1">
-                <label class="form-label">Priority Level *</label>
-                <select class="form-input1">
-                    <option>Low Priority</option>
-                    <option>Medium Priority</option>
-                    <option>High Priority</option>
-                </select>
-                <label class="form-label">Estimated Hours</label>
-                <input type="number" placeholder="54" class="form-input1">
+                <div class="input-wrapper">
+                    <label class="form-label-top">Due Date *</label>
+                    <input type="date" class="form-input" required>
+                </div>
+                <div class="input-wrapper">
+                    <label class="form-label-top">Due Time</label>
+                    <input type="time" class="form-input-normal">
+                </div>
+                <div class="input-wrapper">
+                    <label class="form-label-top">Priority Level *</label>
+                    <select class="form-input-normal">
+                        <option>Low Priority</option>
+                        <option>Medium Priority</option>
+                        <option>High Priority</option>
+                    </select>
+                </div>
+                <div class="input-wrapper">
+                    <label class="form-label-top">Estimated Hours</label>
+                    <input type="number" placeholder="54" class="form-input-normal">
+                </div>
                 <input type="url" placeholder="Project URL" class="form-input1">
                 <textarea placeholder="Task Description" class="form-input1 form-textarea"></textarea>
                 <label class="form-label">Task Progress</label>

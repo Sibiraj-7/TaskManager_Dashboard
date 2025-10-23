@@ -126,7 +126,7 @@ body {
     font-size: 0.95rem;
     transition: border-color 0.2s;
 }
-.form-input:focus {
+.form-input:focus,.form-input1:focus {
     outline: none;
     border-color: #6366f1;
 }

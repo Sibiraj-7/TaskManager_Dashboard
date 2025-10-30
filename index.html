@@ -15,15 +15,15 @@
   <div class="menu-toggle" onclick="document.querySelector('.nav').classList.toggle('active')">☰</div> 
   <nav class="nav">
     <a href="#" class="nav-link active">Dashboard</a>
-    <a href="#" class="nav-link">Tasks</a>
+    <a href="#" class="nav-link">Tasks</a>  
     <a href="#" class="nav-link">Profile</a>
   </nav>
 </header>
 <main class="main-content">
-    <h1 class="page-title">Task Dashboard</h1>
+    <h1 class="page-title"><span style="color:#6666d7;">| </span>Task Dashboard</h1>
     <div class="dashboard-grid">
         <section class="card create-task">
-            <h2 class="card-title"><span class="icon">📝</span>Create New Task</h2>
+            <h2 class="card-title1"><span class="icon">📝</span>Create New Task</h2> 
             <form class="task-form">
                 <input type="text" placeholder="Task Name *" class="form-input" required>
                 <input type="email" placeholder="Assignee Email *" class="form-input" required>
@@ -45,30 +45,33 @@
                 </div>
                 <div class="input-wrapper">
                     <label class="form-label-top">Estimated Hours</label>
-                    <input type="number" placeholder="54" class="form-input-normal">
+                    <input type="number" class="form-input-normal"  inputmode="numeric" onkeydown="if(['e','E','+','-'].includes(event.key)) event.preventDefault();" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                 </div>
                 <input type="url" placeholder="Project URL" class="form-input1">
                 <textarea placeholder="Task Description" class="form-input1 form-textarea"></textarea>
-                <label class="form-label">Task Progress</label>
+                <label class="form-align">Task Progress</label>
                 <input type="range" min="0" max="100" value="0" class="progress-slider" title="Drag to change progress">
                 <div class="progressText">0%</div>
-                <label class="form-label">Task Color</label>
+                <label class="form-align">Task Color</label>
                 <input type="color" class="form-input-color">
                 <label class="form-label1">Task Type</label>
                 <div class="task-type">
-                    <label><input type="checkbox"> Bug Fix</label>
-                    <label><input type="checkbox"> Feature</label>
-                    <label><input type="checkbox"> Enhancement</label>
+                    <label class="task-check"><input type="checkbox" class="task-check"> Bug Fix</label>
+                    <label class="task-check"><input type="checkbox" class="task-check"> Feature</label>
+                    <label class="task-check"><input type="checkbox" class="task-check"> Enhancement</label>
                 </div>
                 <label class="form-label1">Status</label>
                 <div class="task-status">
-                    <label><input type="radio" name="status" checked> Pending</label>
-                    <label><input type="radio" name="status"> In Progress</label>
-                    <label><input type="radio" name="status"> Completed</label>
+                    <label class="task-check"><input type="radio" name="status" class="task-check"> Pending</label>
+                    <label class="task-check"><input type="radio" name="status" class="task-check"> In Progress</label>
+                    <label class="task-check"><input type="radio" name="status" class="task-check"> Completed</label>
                 </div>
                 <div class="file-upload">
-                    <p>📎 Click to upload attachments</p>
-                    <small>Supported: PDF, DOC, Images</small>
+                    <label for="fileInput" class="file-attach">
+                        🔗 Click to upload attachments<br>
+                        <span><small>Supported: PDF, DOC, Images</small></span>
+                        <input type="file" id="fileInput" accept=".pdf,.doc,.docx,image/*" multiple hidden> 
+                    </label>
                 </div>
                 <div class="form-buttons">
                     <button type="submit" class="create-btn">✓ Create Task</button>
@@ -78,7 +81,9 @@
         </section>
         <section class="card active-tasks">
             <div class="section-header">
-                <h2 class="card-title"><span class="icon">✅</span>Active Tasks</h2>
+                <h2 class="card-title">
+                    <span class="icon">✅</span>Active Tasks
+                </h2>
                 <div class="filter-buttons">
                     <button class="filter-btn active">All</button>
                     <button class="filter-btn">High</button>
@@ -165,11 +170,11 @@
 </main>
 <footer class="footer">
     <div class="footer-grid">
-        <div>
+        <div class="footer-col">
             <h3>TaskManager</h3>
             <p>Organize your work and life, finally.</p>
         </div>
-        <div>
+        <div class="footer-col">
             <h4>Features</h4>
             <ul>
                 <li>Task Management</li>
@@ -178,7 +183,7 @@
                 <li>Integrations</li>
             </ul>
         </div>
-        <div>
+        <div class="footer-col">
             <h4>Resources</h4>
             <ul>
                 <li>Documentation</li>
@@ -187,10 +192,10 @@
                 <li>Support</li>
             </ul>
         </div>
-        <div>
+        <div class="footer-col">
             <h4>Company</h4>
             <ul>
-                <li>About Us</li>
+                <li>About Us</li>   
                 <li>Careers</li>
                 <li>Privacy Policy</li>
                 <li>Terms of Service</li>

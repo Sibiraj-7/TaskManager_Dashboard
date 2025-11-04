@@ -373,6 +373,10 @@ select.form-input {
     font-size: 0.9rem;
 }
 
+.task-status{
+    padding-bottom: 12px;
+}
+
 .task-type div, .task-status div {
     flex: 0 0 120px;
     user-select: none;

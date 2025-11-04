@@ -588,6 +588,12 @@ select.form-input {
 }
 
 @media (min-width: 700px) and (max-width: 1200px) {
+    .task-type , .task-status{
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        width: 100%;
+    }
+
     .form-buttons {
         width: 100%;
         max-width: 100%;

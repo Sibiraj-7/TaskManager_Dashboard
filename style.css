@@ -525,7 +525,7 @@ select.form-input {
     }
 }
 
-@media (min-width: 769px) {
+@media (min-width: 768px) {
     .section-header {
         flex-direction: row; 
         justify-content: space-between; 

@@ -250,10 +250,6 @@ select.form-input {
     border-color: #6366f1;
 }
 
-.active-tasks {
-    overflow: visible;
-}
-
 .tasks-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

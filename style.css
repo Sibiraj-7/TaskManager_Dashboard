@@ -478,6 +478,7 @@ select.form-input {
     font-size: 0.95rem;
     color: #4b5563; 
     line-height: 1.5;
+    cursor:pointer;
 }
 
 .footer ul {

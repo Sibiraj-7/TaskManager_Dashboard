@@ -82,7 +82,7 @@ body {
 }
 
 .main-content {
-    padding:30px 50px;
+    padding:30px 50px 80px;
     margin-right: 1px;
 }
 
@@ -194,6 +194,7 @@ body {
 
 .form-input1 {
     padding: 0.75rem;
+    font-family:sans-serif;
     border: 1px solid #d1d3d7;
     border-radius: 8px;
     font-size: 0.95rem;
@@ -208,7 +209,6 @@ body {
 .form-textarea {
     min-height: 100px;
     resize: vertical;
-    font-family: inherit;
 }
 
 select.form-input {
@@ -220,7 +220,7 @@ select.form-input {
     display: flex;
     flex-direction: column; 
     align-items: flex-start;
-    gap: 10px;
+    gap: 14px;
     margin-bottom: 1.5rem;
 }
 
@@ -253,6 +253,7 @@ select.form-input {
 .tasks-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    /* grid-template-columns: repeat(2, 1fr); */
     gap: 1.5rem;
     width: 100%;
 }
@@ -458,7 +459,7 @@ select.form-input {
 
 .footer-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); 
+    grid-template-columns: repeat(4, 1fr);
     gap: 4rem;
     text-align: left;
     max-width: 1200px;
@@ -476,9 +477,9 @@ select.form-input {
 
 .footer p, .footer li {
     font-size: 0.95rem;
-    color: #4b5563; 
+    color: #4b5563;
     line-height: 1.5;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .footer ul {
@@ -543,6 +544,9 @@ select.form-input {
 @media (max-width: 768px) {
     .menu-toggle {
         display: block;
+    }
+    #menu-toggle:checked ~ .nav{
+        display: flex;
     }
 
     .nav {
@@ -612,4 +616,10 @@ select.form-input {
         font-size: 0.95rem !important;
         font-weight: 600 !important;
     } 
+}
+
+@media (min-width:1540px){
+    .tasks-grid{
+        grid-template-columns: repeat(2, 1fr);
+    }
 }

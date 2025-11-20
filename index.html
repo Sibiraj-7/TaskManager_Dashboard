@@ -1,208 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TaskManager</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-<header class="header">
-  <div class="logo">
-    <div class="logo-icon">TM</div>
-    <span class="logo-text">TaskManager</span>
-  </div>
-  <div class="menu-toggle" onclick="document.querySelector('.nav').classList.toggle('active')">☰</div> 
-  <nav class="nav">
-    <a href="#" class="nav-link active">Dashboard</a>
-    <a href="#" class="nav-link">Tasks</a>  
-    <a href="#" class="nav-link">Profile</a>
-  </nav>
-</header>
-<main class="main-content">
-    <h1 class="page-title"><span style="color:#6666d7;">| </span>Task Dashboard</h1>
-    <div class="dashboard-grid">
-        <section class="card create-task">
-            <h2 class="card-title1"><span class="icon">📝</span>Create New Task</h2> 
-            <form class="task-form">
-                <input type="text" placeholder="Task Name *" class="form-input" required>
-                <input type="email" placeholder="Assignee Email *" class="form-input" required>
-                <div class="input-wrapper">
-                    <label class="form-label-top">Due Date *</label>
-                    <input type="date" class="form-input" required>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>TaskManager</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">TM</div>
+                <span class="logo-text">TaskManager</span>
+            </div>
+            <input type="checkbox" id="menu-toggle" hidden>
+            <label for="menu-toggle" class="menu-toggle">☰</label>
+            <nav class="nav">
+                <a href="#" class="nav-link active">Dashboard</a>
+                <a href="#" class="nav-link">Tasks</a>  
+                <a href="#" class="nav-link">Profile</a>
+            </nav>
+        </header>
+        <main class="main-content">
+            <h1 class="page-title"><span style="color:#6666d7;">| </span>Task Dashboard</h1>
+            <div class="dashboard-grid">
+                <section class="card create-task">
+                    <h2 class="card-title1"><span class="icon">📝</span>Create New Task</h2>
+                    <form class="task-form">
+                        <input type="text" placeholder="Task Name *" class="form-input" required>
+                        <input type="email" placeholder="Assignee Email *" class="form-input" required>
+                        <div class="input-wrapper">
+                            <label class="form-label-top">Due Date *</label>
+                            <input type="date" class="form-input" required>
+                        </div>
+                        <div class="input-wrapper">
+                            <label class="form-label-top">Due Time</label>
+                            <input type="time" class="form-input-normal">
+                        </div>
+                        <div class="input-wrapper">
+                            <label class="form-label-top">Priority Level *</label>
+                            <select class="form-input-normal">
+                                <option hidden></option>
+                                <option>Low Priority</option>
+                                <option>Medium Priority</option>
+                                <option>High Priority</option>
+                            </select>
+                        </div>
+                        <div class="input-wrapper">
+                            <label class="form-label-top">Estimated Hours</label>
+                            <input type="number" class="form-input-normal"  inputmode="numeric" onkeydown="if(['e','E','+','-'].includes(event.key)) event.preventDefault();" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                        </div>
+                        <input type="url" placeholder="Project URL" class="form-input1">
+                        <textarea placeholder="Task Description" class="form-input1 form-textarea"></textarea>
+                        <label class="form-align">Task Progress</label>
+                        <input type="range" min="0" max="100" value="0" class="progress-slider" title="Drag to change progress">
+                        <div class="progressText">0%</div>
+                        <label class="form-align">Task Color</label>
+                        <input type="color" class="form-input-color">
+                        <label class="form-label1">Task Type</label>
+                        <div class="task-type">
+                            <div><label><input type="checkbox" class="task-check"> Bug Fix</label></div>
+                            <div><label><input type="checkbox" class="task-check"> Feature</label></div>
+                            <div><label><input type="checkbox" class="task-check"> Enhancement</label></div>
+                        </div>
+                        <label class="form-label1">Status</label>
+                        <div class="task-status">
+                            <div><label><input type="radio" name="status" class="task-check"> Pending</label></div>
+                            <div><label><input type="radio" name="status" class="task-check"> In Progress</label></div>
+                            <div><label><input type="radio" name="status" class="task-check"> Completed</label></div>
+                        </div>
+                        <div class="file-upload">
+                            <label for="fileInput" class="file-attach">
+                                🔗 Click to upload attachments<br>
+                                <span><small>Supported: PDF, DOC, Images</small></span>
+                                <input type="file" id="fileInput" accept=".pdf,.doc,.docx,image/*" multiple hidden> 
+                            </label>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="submit" class="create-btn">✓ Create Task</button>
+                            <button type="reset" class="reset-btn">✗ Reset</button>
+                        </div>
+                    </form>
+                </section>
+                <section class="card active-tasks">
+                    <div class="section-header">
+                        <h2 class="card-title"><span class="icon">✅</span>Active Tasks</h2>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active">All</button>
+                            <button class="filter-btn">High</button>
+                            <button class="filter-btn">Medium</button>
+                            <button class="filter-btn">Low</button>
+                        </div>
+                    </div>
+                    <div class="tasks-grid">
+                        <div class="task-card">
+                            <h3 class="task-title">Design Homepage Mockup</h3>
+                            <p class="task-description">Create wireframes and high-fidelity mockups for the new homepage redesign project.</p>
+                            <div class="task-meta">
+                                <div class="meta-item">📅 Due: Oct 20, 2025</div>
+                                <div class="meta-item">👤 Sarah Johnson</div>
+                            </div>
+                            <div class="task-footer">
+                                <span class="badge badge-high">● HIGH</span>
+                                <span class="badge badge-progress"><span class="dot-progress">●</span> In Progress</span>
+                            </div>
+                        </div>
+                        <div class="task-card">
+                            <h3 class="task-title">Fix Login Authentication Bug</h3>
+                            <p class="task-description">Resolve the issue where users are logged out unexpectedly after 5 minutes of inactivity.</p>
+                            <div class="task-meta">
+                                <div class="meta-item">📅 Due: Oct 15, 2025</div>
+                                <div class="meta-item">👤 Michael Chen</div>
+                            </div>
+                            <div class="task-footer">
+                                <span class="badge badge-high">● HIGH</span>
+                                <span class="badge badge-pending"><span class="dot-pending">●</span> Pending</span>
+                            </div>
+                        </div>
+                        <div class="task-card">
+                            <h3 class="task-title">Update Documentation</h3>
+                            <p class="task-description">Review and update the API documentation with the latest endpoint changes and examples.</p>
+                            <div class="task-meta">
+                                <div class="meta-item">📅 Due: Oct 25, 2025</div>
+                                <div class="meta-item">👤 Emily Rodriguez</div>
+                            </div>
+                            <div class="task-footer">
+                                <span class="badge badge-medium">● MEDIUM</span>
+                                <span class="badge badge-completed"><span class="dot-completed">●</span> Completed</span>
+                            </div>
+                        </div>
+                        <div class="task-card">
+                            <h3 class="task-title">Database Performance Optimization</h3>
+                            <p class="task-description">Analyze and optimize slow-running queries to improve overall database performance by 30%.</p>
+                            <div class="task-meta">
+                                <div class="meta-item">📅 Due: Oct 30, 2025</div>
+                                <div class="meta-item">👤 David Kim</div>
+                            </div>
+                            <div class="task-footer">
+                                <span class="badge badge-medium">● MEDIUM</span>
+                                <span class="badge badge-pending"><span class="dot-pending">●</span> Pending</span>
+                            </div>
+                        </div>
+                        <div class="task-card">
+                            <h3 class="task-title">Implement Dark Mode</h3>
+                            <p class="task-description">Add dark mode theme support across the application with user preference persistence.</p>
+                            <div class="task-meta">
+                                <div class="meta-item">📅 Due: Nov 05, 2025</div>
+                                <div class="meta-item">👤 Alex Thompson</div>
+                            </div>
+                            <div class="task-footer">
+                                <span class="badge badge-low" >● LOW</span>
+                                <span class="badge badge-pending"><span class="dot-pending">●</span> Pending</span>
+                            </div>
+                        </div>
+                        <div class="task-card">
+                            <h3 class="task-title">User Testing Session</h3>
+                            <p class="task-description">Conduct user testing sessions with 10 participants to gather feedback on the new interface.</p>
+                            <div class="task-meta">
+                                <div class="meta-item">📅 Due: Oct 28, 2025</div>
+                                <div class="meta-item">👤 Lisa Anderson</div>
+                            </div>
+                            <div class="task-footer">
+                                <span class="badge badge-high">● HIGH</span>
+                                <span class="badge badge-completed"><span class="dot-completed">●</span> Completed</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <footer class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>TaskManager</h3>
+                    <p>Organize your work and life, finally.</p>
                 </div>
-                <div class="input-wrapper">
-                    <label class="form-label-top">Due Time</label>
-                    <input type="time" class="form-input-normal">
+                <div class="footer-col">
+                    <h4>Features</h4>
+                    <ul>
+                        <li>Task Management</li>
+                        <li>Team Collaboration</li>
+                        <li>Analytics</li>
+                        <li>Integrations</li>
+                    </ul>
                 </div>
-                <div class="input-wrapper"> 
-                    <label class="form-label-top">Priority Level *</label>
-                    <select class="form-input-normal">
-                        <option>Low Priority</option>
-                        <option>Medium Priority</option>
-                        <option>High Priority</option>
-                    </select>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li>Documentation</li>
+                        <li>Tutorials</li>
+                        <li>API Reference</li>
+                        <li>Support</li>
+                    </ul>
                 </div>
-                <div class="input-wrapper">
-                    <label class="form-label-top">Estimated Hours</label>
-                    <input type="number" class="form-input-normal"  inputmode="numeric" onkeydown="if(['e','E','+','-'].includes(event.key)) event.preventDefault();" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
-                </div>
-                <input type="url" placeholder="Project URL" class="form-input1">
-                <textarea placeholder="Task Description" class="form-input1 form-textarea"></textarea>
-                <label class="form-align">Task Progress</label>
-                <input type="range" min="0" max="100" value="0" class="progress-slider" title="Drag to change progress">
-                <div class="progressText">0%</div>
-                <label class="form-align">Task Color</label>
-                <input type="color" class="form-input-color">
-                <label class="form-label1">Task Type</label>
-                <div class="task-type">
-                    <div><label><input type="checkbox" class="task-check"> Bug Fix</label></div>
-                    <div><label><input type="checkbox" class="task-check"> Feature</label></div>
-                    <div><label><input type="checkbox" class="task-check"> Enhancement</label></div>
-                </div>
-                <label class="form-label1">Status</label>
-                <div class="task-status">
-                    <div><label><input type="radio" name="status" class="task-check"> Pending</label></div>
-                    <div><label><input type="radio" name="status" class="task-check"> In Progress</label></div>
-                    <div><label><input type="radio" name="status" class="task-check"> Completed</label></div>
-                </div>
-                <div class="file-upload">
-                    <label for="fileInput" class="file-attach">
-                        🔗 Click to upload attachments<br>
-                        <span><small>Supported: PDF, DOC, Images</small></span>
-                        <input type="file" id="fileInput" accept=".pdf,.doc,.docx,image/*" multiple hidden> 
-                    </label>
-                </div>
-                <div class="form-buttons">
-                    <button type="submit" class="create-btn">✓ Create Task</button>
-                    <button type="reset" class="reset-btn">✗ Reset</button>
-                </div>
-            </form>
-        </section>
-        <section class="card active-tasks">
-            <div class="section-header">
-                <h2 class="card-title"><span class="icon">✅</span>Active Tasks</h2>
-                <div class="filter-buttons">
-                    <button class="filter-btn active">All</button>
-                    <button class="filter-btn">High</button>
-                    <button class="filter-btn">Medium</button>
-                    <button class="filter-btn">Low</button>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li>About Us</li>   
+                        <li>Careers</li>
+                        <li>Privacy Policy</li>
+                        <li>Terms of Service</li>
+                    </ul>
                 </div>
             </div>
-            <div class="tasks-grid">
-                <div class="task-card">
-                    <h3 class="task-title">Design Homepage Mockup</h3>
-                    <p class="task-description">Create wireframes and high-fidelity mockups for the new homepage redesign project.</p>
-                    <div class="task-meta">
-                        <div class="meta-item">📅 Due: Oct 20, 2025</div>
-                        <div class="meta-item">👤 Sarah Johnson</div>
-                    </div>
-                    <div class="task-footer">
-                        <span class="badge badge-high">● HIGH</span>
-                        <span class="badge badge-progress"><span class="dot-progress">●</span> In Progress</span>
-                    </div>
-                </div>
-                <div class="task-card">
-                    <h3 class="task-title">Fix Login Authentication Bug</h3>
-                    <p class="task-description">Resolve the issue where users are logged out unexpectedly after 5 minutes of inactivity.</p>
-                    <div class="task-meta">
-                        <div class="meta-item">📅 Due: Oct 15, 2025</div>
-                        <div class="meta-item">👤 Michael Chen</div>
-                    </div>
-                    <div class="task-footer">
-                        <span class="badge badge-high">● HIGH</span>
-                        <span class="badge badge-pending"><span class="dot-pending">●</span> Pending</span>
-                    </div>
-                </div>
-                <div class="task-card">
-                    <h3 class="task-title">Update Documentation</h3>
-                    <p class="task-description">Review and update the API documentation with the latest endpoint changes and examples.</p>
-                    <div class="task-meta">
-                        <div class="meta-item">📅 Due: Oct 25, 2025</div>
-                        <div class="meta-item">👤 Emily Rodriguez</div>
-                    </div>
-                    <div class="task-footer">
-                        <span class="badge badge-medium">● MEDIUM</span>
-                        <span class="badge badge-completed"><span class="dot-completed">●</span> Completed</span>
-                    </div>
-                </div>
-                <div class="task-card">
-                    <h3 class="task-title">Database Performance Optimization</h3>
-                    <p class="task-description">Analyze and optimize slow-running queries to improve overall database performance by 30%.</p>
-                    <div class="task-meta">
-                        <div class="meta-item">📅 Due: Oct 30, 2025</div>
-                        <div class="meta-item">👤 David Kim</div>
-                    </div>
-                    <div class="task-footer">
-                        <span class="badge badge-medium">● MEDIUM</span>
-                        <span class="badge badge-pending"><span class="dot-pending">●</span> Pending</span>
-                    </div>
-                </div>
-                <div class="task-card">
-                    <h3 class="task-title">Implement Dark Mode</h3>
-                    <p class="task-description">Add dark mode theme support across the application with user preference persistence.</p>
-                    <div class="task-meta">
-                        <div class="meta-item">📅 Due: Nov 05, 2025</div>
-                        <div class="meta-item">👤 Alex Thompson</div>
-                    </div>
-                    <div class="task-footer">
-                        <span class="badge badge-low" >● LOW</span>
-                        <span class="badge badge-pending"><span class="dot-pending">●</span> Pending</span>
-                    </div>
-                </div>
-                <div class="task-card">
-                    <h3 class="task-title">User Testing Session</h3>
-                    <p class="task-description">Conduct user testing sessions with 10 participants to gather feedback on the new interface.</p>
-                    <div class="task-meta">
-                        <div class="meta-item">📅 Due: Oct 28, 2025</div>
-                        <div class="meta-item">👤 Lisa Anderson</div>
-                    </div>
-                    <div class="task-footer">
-                        <span class="badge badge-high">● HIGH</span>
-                        <span class="badge badge-completed"><span class="dot-completed">●</span> Completed</span>
-                    </div>
-                </div>
+            <div class="footer-bottom">
+                © 2025 TaskManager. All rights reserved. Built with ❤️ for productivity.
             </div>
-        </section>
-    </div>
-</main>
-<footer class="footer">
-    <div class="footer-grid">
-        <div class="footer-col">
-            <h3>TaskManager</h3>
-            <p>Organize your work and life, finally.</p>
-        </div>
-        <div class="footer-col">
-            <h4>Features</h4>
-            <ul>
-                <li>Task Management</li>
-                <li>Team Collaboration</li>
-                <li>Analytics</li>
-                <li>Integrations</li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h4>Resources</h4>
-            <ul>
-                <li>Documentation</li>
-                <li>Tutorials</li>
-                <li>API Reference</li>
-                <li>Support</li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h4>Company</h4>
-            <ul>
-                <li>About Us</li>   
-                <li>Careers</li>
-                <li>Privacy Policy</li>
-                <li>Terms of Service</li>
-            </ul>
-        </div>
-    </div>
-    <div class="footer-bottom">
-        © 2025 TaskManager. All rights reserved. Built with ❤️ for productivity.
-    </div>
-</footer>
-</body>
+        </footer>
+    </body>
 </html>

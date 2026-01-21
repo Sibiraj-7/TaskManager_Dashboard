@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>TaskManager</title>
         <link rel="stylesheet" href="style.css">
-        <script src = "script.js"></script>
+        <script src = "script.js" defer></script>
     </head>
     <body>
         <header class="header">
@@ -27,7 +27,8 @@
                 <section class="card create-task">
                     <h2 class="card-title1"><span class="icon">📝</span>Create New Task</h2>
                     <form class="task-form">
-                        <input type="text" placeholder="Task Name *" class="form-input" required>
+                        <input type="text" id="taskName" placeholder="Task Name *" class="form-input" required>
+                        <input type="text" id="userName" placeholder="User Name *" class="form-input" required>
                         <input type="email" placeholder="Assignee Email *" class="form-input" required>
                         <div class="input-wrapper">
                             <label class="form-label-top">Due Date *</label>
@@ -39,7 +40,7 @@
                         </div>
                         <div class="input-wrapper">
                             <label class="form-label-top">Priority Level *</label>
-                            <select class="form-input-normal">
+                            <select class="form-input-normal" required>
                                 <option hidden></option>
                                 <option>Low Priority</option>
                                 <option>Medium Priority</option>
@@ -54,28 +55,28 @@
                         <textarea placeholder="Task Description" class="form-input1 form-textarea"></textarea>
                         <label class="form-align">Task Progress</label>
                         <input type="range" min="0" max="100" value="0" class="progress-slider" title="Drag to change progress">
-                        <div class="progressText">0%</div>
-                        <label class="form-align">Task Color</label>
-                        <input type="color" class="form-input-color">
+                        <div class="progress-text">0%</div>
+                        <!-- <label class="form-align">Task Color</label>
+                        <input type="color" class="form-input-color"> -->
                         <label class="form-label1">Task Type</label>
                         <div class="task-type">
-                            <div><label><input type="checkbox" class="task-check"> Bug Fix</label></div>
-                            <div><label><input type="checkbox" class="task-check"> Feature</label></div>
-                            <div><label><input type="checkbox" class="task-check"> Enhancement</label></div>
+                            <div><label><input type="checkbox" class="task-check" name="taskType" value="Bug Fix"> Bug Fix</label></div>
+                            <div><label><input type="checkbox" class="task-check" name="taskType" value="Feature"> Feature</label></div>
+                            <div><label><input type="checkbox" class="task-check" name="taskType" value="Enhancement"> Enhancement</label></div>
                         </div>
                         <label class="form-label1">Status</label>
                         <div class="task-status">
-                            <div><label><input type="radio" name="status" class="task-check"> Pending</label></div>
-                            <div><label><input type="radio" name="status" class="task-check"> In Progress</label></div>
-                            <div><label><input type="radio" name="status" class="task-check"> Completed</label></div>
+                            <div><label><input type="radio" name="status" class="task-check" value="Pending"> Pending</label></div>
+                            <div><label><input type="radio" name="status" class="task-check" value="In Progress"> In Progress</label></div>
+                            <div><label><input type="radio" name="status" class="task-check" value="Completed"> Completed</label></div>
                         </div>
-                        <div class="file-upload">
+                        <!-- <div class="file-upload">
                             <label for="fileInput" class="file-attach">
                                 🔗 Click to upload attachments<br>
                                 <span><small>Supported: PDF, DOC, Images</small></span>
                                 <input type="file" id="fileInput" accept=".pdf,.doc,.docx,image/*" multiple hidden> 
                             </label>
-                        </div>
+                        </div> -->
                         <div class="form-buttons">
                             <button type="submit" class="create-btn">✓ Create Task</button>
                             <button type="reset" class="reset-btn">✗ Reset</button>
@@ -94,6 +95,10 @@
                     </div>
                     <div class="tasks-grid">
                         <div class="task-card">
+                            <div class="card-actions">
+                                <button class="edit-btn" title="Edit">🖍</button>
+                                <button class="delete-btn" title="Delete">🗑️</button>
+                            </div>
                             <h3 class="task-title">Design Homepage Mockup</h3>
                             <p class="task-description">Create wireframes and high-fidelity mockups for the new homepage redesign project.</p>
                             <div class="task-meta">
@@ -106,6 +111,10 @@
                             </div>
                         </div>
                         <div class="task-card">
+                            <div class="card-actions">
+                                <button class="edit-btn" title="Edit">🖍</button>
+                                <button class="delete-btn" title="Delete">🗑️</button>
+                            </div>
                             <h3 class="task-title">Fix Login Authentication Bug</h3>
                             <p class="task-description">Resolve the issue where users are logged out unexpectedly after 5 minutes of inactivity.</p>
                             <div class="task-meta">
@@ -118,6 +127,10 @@
                             </div>
                         </div>
                         <div class="task-card">
+                            <div class="card-actions">
+                                <button class="edit-btn" title="Edit">🖍</button>
+                                <button class="delete-btn" title="Delete">🗑️</button>
+                            </div>
                             <h3 class="task-title">Update Documentation</h3>
                             <p class="task-description">Review and update the API documentation with the latest endpoint changes and examples.</p>
                             <div class="task-meta">
@@ -130,6 +143,10 @@
                             </div>
                         </div>
                         <div class="task-card">
+                            <div class="card-actions">
+                                <button class="edit-btn" title="Edit">🖍</button>
+                                <button class="delete-btn" title="Delete">🗑️</button>
+                            </div>
                             <h3 class="task-title">Database Performance Optimization</h3>
                             <p class="task-description">Analyze and optimize slow-running queries to improve overall database performance by 30%.</p>
                             <div class="task-meta">
@@ -142,6 +159,10 @@
                             </div>
                         </div>
                         <div class="task-card">
+                            <div class="card-actions">
+                                <button class="edit-btn" title="Edit">🖍</button>
+                                <button class="delete-btn" title="Delete">🗑️</button>
+                            </div>
                             <h3 class="task-title">Implement Dark Mode</h3>
                             <p class="task-description">Add dark mode theme support across the application with user preference persistence.</p>
                             <div class="task-meta">
@@ -154,6 +175,10 @@
                             </div>
                         </div>
                         <div class="task-card">
+                            <div class="card-actions">
+                                <button class="edit-btn" title="Edit">🖍</button>
+                                <button class="delete-btn" title="Delete">🗑️</button>
+                            </div>
                             <h3 class="task-title">User Testing Session</h3>
                             <p class="task-description">Conduct user testing sessions with 10 participants to gather feedback on the new interface.</p>
                             <div class="task-meta">
@@ -207,5 +232,89 @@
                 © 2025 TaskManager. All rights reserved. Built with ❤️ for productivity.
             </div>
         </footer>
+        <div class="modal-overlay" id="editModal">
+            <div class="modal modal-lg">
+
+                <div class="modal-header">
+                    <h2>Edit Task</h2>
+                    <button class="close-btn" id="closeModal">✖</button>
+                </div>
+
+                <form id="editForm" class="modal-body">
+                    <input type="hidden" id="editTaskId">
+
+                    <div class="form-grid">
+                        <div>
+                        <label>Task Name</label>
+                        <input type="text" id="editTaskName" required>
+                        </div>
+
+                        <div>
+                            <label>User Name</label>
+                            <input type="text" id="editUserName" required>
+                        </div>
+
+                        <div>
+                        <label>Email</label>
+                        <input type="email" id="editEmail" required>
+                        </div>
+
+                        <div>
+                        <label>Due Date</label>
+                        <input type="date" id="editDate" required>
+                        </div>
+
+                        <div>
+                        <label>Time</label>
+                        <input type="time" id="editTime">
+                        </div>
+
+                        <div>
+                        <label>Priority</label>
+                        <select id="editPriority" required>
+                            <option value="High Priority">High Priority</option>
+                            <option value="Medium Priority">Medium Priority</option>
+                            <option value="Low Priority">Low Priority</option>
+                        </select>
+                        </div>
+
+                        <div>
+                            <label>Task Progress</label>
+                            <input type="range" min="0" max="100" value="0" id="editProgress" class="progress-slider" title="Drag to change progress">
+                            <div class="progress-text" id="editProgressText">0%</div>
+                        </div>
+                        <div>
+                            <label>Description</label>
+                            <textarea class="task-description-modal" id="editDescription" rows="4" placeholder="Task Description"></textarea>
+                        </div>
+
+                        <div>
+                            <label>Task Type</label>
+                            <div class="task-type-modal" id="editTaskType">
+                                <div><label><input type="checkbox" class="task-check-modal" value="Bug Fix"> Bug Fix</label></div>
+                                <div><label><input type="checkbox" class="task-check-modal" value="Feature"> Feature</label></div>
+                                <div><label><input type="checkbox" class="task-check-modal" value="Enhancement"> Enhancement</label></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label>Status</label>
+                            <div class="task-status-modal" id="editTaskStatus">
+                                <div><label><input type="radio" name="editStatus" class="task-check-modal" value="Pending"> Pending</label></div>
+                                <div><label><input type="radio" name="editStatus" class="task-check-modal" value="In Progress"> In Progress</label></div>
+                                <div><label><input type="radio" name="editStatus" class="task-check-modal" value="Completed"> Completed</label></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn-save" id="saveEdit">Save Changes</button>
+                        <button type="button" class="btn-cancel" id="cancelEdit">Cancel</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
     </body>
 </html>

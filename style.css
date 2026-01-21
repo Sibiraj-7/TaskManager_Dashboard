@@ -250,10 +250,30 @@ select.form-input {
     border-color: #6366f1;
 }
 
+.card-actions {
+    position: absolute;
+    top: 10px;
+    right: 18px;
+    display: flex;
+    gap: 10px;
+}
+
+.card-actions button {  
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 4px;
+    opacity: 0.7;
+}
+
+.card-actions button:hover {
+    opacity: 1;
+}
+
 .tasks-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    /* grid-template-columns: repeat(2, 1fr); */
     gap: 1.5rem;
     width: 100%;
 }
@@ -349,7 +369,7 @@ select.form-input {
     cursor: pointer;
 }
 
-.progressText {
+.progress-text {
     font-size: 0.85rem;
     color: #6366f1;
     text-align: center;
@@ -501,6 +521,135 @@ select.form-input {
     max-width: 1200px;
 }
 
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-overlay.show {
+  display: flex;
+}
+
+.modal-lg {
+  background: #fff;
+  width: 100%;
+  max-width: 1200px;
+  max-height: 85vh;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #eee;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 32px 40px;
+  overflow-y: auto;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  width: 100%;
+}
+
+.form-grid label {
+  font-size: 15px;
+  color: #555;
+  margin-bottom: 8px;
+  display: block;
+  font-weight: 500;
+}
+
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.form-grid textarea {
+  resize: vertical;
+}
+
+.form-grid input[type="range"] {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.task-type-modal,
+.task-status-modal {
+  display: flex;
+  justify-content: space-between;
+  padding:0rem 4rem;
+  align-items: center;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.task-type-modal label,
+.task-status-modal label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #4b5563;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.task-check-modal{
+    cursor:pointer;
+}
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 32px 24px 16px 24px;
+  border-top: 1px solid #eee;
+}
+
+.btn-save {
+  background: #4f46e5;
+  color: #fff;
+  padding: 8px 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+}
+
+.btn-cancel {
+  background: #e5e7eb;
+  padding: 8px 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+}
+
 @media (max-width: 1024px) {
     .footer-grid {
         grid-template-columns: repeat(2, 1fr); 
@@ -586,6 +735,11 @@ select.form-input {
     .main-content {
         padding: 1rem;
     }
+
+    .card-actions {
+        right:8px;
+        top: 5px;
+    }
 }
 
 @media (min-width: 480px) and (max-width: 1200px) {
@@ -616,6 +770,11 @@ select.form-input {
         font-size: 0.95rem !important;
         font-weight: 600 !important;
     } 
+
+    .card-actions {
+        top:2px;
+        right:6px;
+    }
 }
 
 @media (min-width:1540px){

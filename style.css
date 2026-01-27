@@ -650,6 +650,29 @@ select.form-input {
   border-radius: 6px;
 }
 
+.notification {
+    position: fixed;
+    top: 90px;
+    right: 30px;
+    background-color: #22c55e;
+    color: white;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(120%);
+    transition: transform 0.4s ease, opacity 0.3s ease;
+    z-index: 2000;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
 @media (max-width: 1024px) {
     .footer-grid {
         grid-template-columns: repeat(2, 1fr); 

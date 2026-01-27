@@ -8,10 +8,14 @@ document.addEventListener("DOMContentLoaded", () => {
         card.dataset.priority = getPriority(card);
     });
 
+    updateFilterCounts();
+
     filterButtons.forEach(button => {
         button.addEventListener("click",() => {
             setActiveFilter(button);
-            filterTasks(button.textContent.trim().toLowerCase());
+            const filterText = button.textContent.trim();
+            const baseFilter = filterText.split(' ')[0].toLowerCase();
+            filterTasks(baseFilter);
         });
     });
 
@@ -38,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const card = createTask(task.data , task.id);
         tasksGrid.appendChild(card);
     });
+    updateFilterCounts();
 
     taskForm.addEventListener("submit",e =>{
         e.preventDefault();
@@ -49,6 +54,8 @@ document.addEventListener("DOMContentLoaded", () => {
         tasksGrid.appendChild(taskCard);
         storeTask(taskData, taskId);
         applyActiveFilter(taskCard);
+        updateFilterCounts();
+        showNotification("Task created successfully!!");
         taskForm.reset();
         if (progressSlider) progressSlider.value = 0;
         if (progressText) progressText.textContent = "0%";
@@ -73,12 +80,46 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    function updateFilterCounts(){
+        const allCards = document.querySelectorAll(".tasks-grid .task-card");
+        const counts = {
+            all: allCards.length,
+            high: 0,
+            medium: 0,
+            low: 0
+        };
+
+        allCards.forEach(card => {
+            const priority = card.dataset.priority || getPriority(card);
+            if(priority === "high") counts.high++;
+            else if(priority === "medium") counts.medium++;
+            else if(priority === "low") counts.low++;
+        });
+
+        filterButtons.forEach(button => {
+            const buttonText = button.textContent.trim();
+            const baseText = buttonText.split(' ')[0];
+            
+            if(baseText.toLowerCase() === "all"){
+                button.textContent = `All (${counts.all})`;
+            } else if(baseText.toLowerCase() === "high"){
+                button.textContent = `High (${counts.high})`;
+            } else if(baseText.toLowerCase() === "medium"){
+                button.textContent = `Medium (${counts.medium})`;
+            } else if(baseText.toLowerCase() === "low"){
+                button.textContent = `Low (${counts.low})`;
+            }
+        });
+    }
+
     function taskFormData(form){
         const taskName = form.querySelector("#taskName").value.trim();
         const userName = form.querySelector("#userName").value.trim();
         const email = form.querySelector("input[type='email']").value.trim();
         const date = form.querySelector("input[type='date']").value;
         const time = form.querySelector("input[type='time']").value;
+        const estimatedHours = form.querySelector("input[type='number']").value;
+        const projectUrl = form.querySelector("input[type='url']").value;
         const priority = form.querySelector("select").value;
         const description = form.querySelector("textarea").value.trim();
         const status = form.querySelector("input[name='status']:checked")?.value || "Pending";
@@ -91,6 +132,8 @@ document.addEventListener("DOMContentLoaded", () => {
             email,
             date,
             time,
+            estimatedHours,
+            projectUrl,
             priority,
             description,
             status,
@@ -153,7 +196,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const activeBtn = document.querySelector(".filter-btn.active");
         if(!activeBtn) return;
 
-        const filter = activeBtn.textContent.trim().toLowerCase();
+        const filterText = activeBtn.textContent.trim();
+        const filter = filterText.split(' ')[0].toLowerCase();
         if(filter !== "all" && card.dataset.priority !== filter){
             card.style.display = "none";
         }
@@ -169,6 +213,8 @@ document.addEventListener("DOMContentLoaded", () => {
         tasks = tasks.filter(task => task.id !== key);
         localStorage.setItem("tasks", JSON.stringify(tasks));
         card.remove();
+        updateFilterCounts();
+        showNotification("Task deleted Successfully!!");
     }
     
     function openEditModal(card) {
@@ -185,6 +231,8 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("editEmail").value = task.data.email;
         document.getElementById("editDate").value = task.data.date;
         document.getElementById("editTime").value = task.data.time;
+        document.getElementById("editEstimation").value = task.data.estimatedHours;
+        document.getElementById("editProject").value = task.data.projectUrl;
         document.getElementById("editPriority").value = task.data.priority;
         document.getElementById("editDescription").value = task.data.description;
         if (editProgressSlider) editProgressSlider.value = task.data.progress ?? 0;
@@ -202,12 +250,24 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.classList.add("show");
     }
 
-    document.getElementById("closeModal").addEventListener("click", () => {
-        document.getElementById("editModal").classList.remove("show");
-    });
+    function closeEditModal() {
+        const modal = document.getElementById("editModal");
+        if (modal) modal.classList.remove("show");
+    }
 
+    document.getElementById("cancelEdit")?.addEventListener("click", closeEditModal);
+    document.getElementById("closeModal")?.addEventListener("click", closeEditModal);
+    
     document.getElementById("editForm").addEventListener("submit", e => {
         e.preventDefault();
+
+        const modal = document.getElementById("editModal");
+
+        if (modal.dataset.viewOnly === "true") {
+            modal.classList.remove("show");
+            delete modal.dataset.viewOnly;
+            return;
+        }
 
         const taskId = document.getElementById("editTaskId").value;
 
@@ -217,6 +277,8 @@ document.addEventListener("DOMContentLoaded", () => {
             email: document.getElementById("editEmail").value.trim(),
             date: document.getElementById("editDate").value,
             time: document.getElementById("editTime").value,
+            estimatedHours:document.getElementById("editEstimation").value,
+            projectUrl:document.getElementById("editProject").value,
             priority: document.getElementById("editPriority").value,
             description: document.getElementById("editDescription").value,
             status: document.querySelector("input[name='editStatus']:checked")?.value || "Pending",
@@ -233,10 +295,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const card = document.querySelector(`.task-card[data-id="${taskId}"]`);
         const newCard = createTask(updatedData, taskId);
         card.replaceWith(newCard);
+        applyActiveFilter(newCard);
+        updateFilterCounts();
+        showNotification("Task Edited Successfully!!"); 
 
         document.getElementById("editModal").classList.remove("show");
     });
-
 
     document.addEventListener("click",e=>{
         if(e.target.classList.contains("delete-btn")){
@@ -244,7 +308,96 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (e.target.classList.contains("edit-btn")) {
             const card = e.target.closest(".task-card");
-            openEditModal(card);
+            if (!card) return;
+
+            const taskId = card.dataset.id;
+            const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            const existsinLS = taskId && tasks.some(t => t.id === taskId);
+
+            if (existsinLS) {
+                openEditModal(card);    
+            } else {
+                staticCardView(card);
+            }
         }
-    });
+
+    }); 
+
+    function staticCardView(card) {
+        const modal = document.getElementById("editModal");
+
+        document.getElementById("editTaskName").value =
+            card.querySelector(".task-title")?.textContent.trim() || "";
+
+        document.getElementById("editDescription").value =
+            card.querySelector(".task-description")?.textContent.trim() || "";
+
+        const userText = card.querySelector(".user-name")?.textContent || "";
+        document.getElementById("editUserName").value =
+            userText.replace("👤", "").trim();
+
+        const dateText = card.querySelector(".date-time")?.textContent || "";
+        const rawDate = dateText.replace("📅 Due:", "").trim();
+
+        const parsedDate = new Date(rawDate);
+        if (!isNaN(parsedDate)) {
+            document.getElementById("editDate").value =
+                parsedDate.toISOString().split("T")[0];
+        }
+
+        document.getElementById("editEmail").value = "";
+        document.getElementById("editTime").value = "";
+        const priorityKey = getPriority(card);
+
+        const priorityMap = {
+            high: "High Priority",
+            medium: "Medium Priority",
+            low: "Low Priority"
+        };
+
+        document.getElementById("editPriority").value =
+            priorityMap[priorityKey] || "Low Priority";
+
+        document.getElementById("editEstimation").value="";
+        document.getElementById("editProject").value="";
+        
+        const statusValue = getStatus(card);
+
+        document.querySelectorAll('input[name="editStatus"]')
+            .forEach(radio => (radio.checked = false));
+
+        const statusRadio = document.querySelector(
+            `input[name="editStatus"][value="${CSS.escape(statusValue)}"]`
+        );
+
+        if (statusRadio) {
+            statusRadio.checked = true;
+        }
+
+        
+        document.getElementById("editTaskId").value = "";
+
+        modal.dataset.viewOnly = "true";
+
+        modal.classList.add("show");
+    }
+
+    function getStatus(card) {
+        if(card.querySelector(".badge-pending")) return "Pending";
+        if(card.querySelector(".badge-progress")) return "In Progress";
+        if(card.querySelector(".badge-completed")) return "Completed";
+        return "Pending"
+    }
+
+    function showNotification(message) {
+        const notify = document.getElementById("notification");
+        if (!notify) return;
+
+        notify.textContent = message;
+        notify.classList.add("show");
+
+        setTimeout(() => {
+            notify.classList.remove("show");
+        }, 3000);
+    }
 });

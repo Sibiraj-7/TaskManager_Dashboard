@@ -8,8 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
         card.dataset.priority = getPriority(card);
     });
 
-    updateFilterCounts();
-
     filterButtons.forEach(button => {
         button.addEventListener("click",() => {
             setActiveFilter(button);
@@ -75,8 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function filterTasks(filter){
         document.querySelectorAll(".tasks-grid .task-card").forEach(card => {
-            card.style.display = 
-                filter === "all" || card.dataset.priority === filter ? "" : "none";
+            card.style.display = filter === "all" || card.dataset.priority === filter ? "" : "none";
         });
     }
 
@@ -207,6 +204,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const card = button.closest(".task-card");
         if (!card) return;
 
+        const confirmDelete = confirm("Are you sure you want to delete this task?");
+        if (!confirmDelete) return;
+
         const key = card.dataset.id;
 
         let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
@@ -218,7 +218,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function openEditModal(card) {
-        const modal = document.getElementById("editModal");
         const taskId = card.dataset.id;
 
         const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
@@ -247,16 +246,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const statusRadio = document.querySelector(`#editTaskStatus input[type="radio"][value="${CSS.escape(editStatus)}"]`);
         if (statusRadio) statusRadio.checked = true;
 
-        modal.classList.add("show");
+        openModal("editModal");
     }
 
-    function closeEditModal() {
-        const modal = document.getElementById("editModal");
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) modal.classList.add("show");
+    }
+
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
         if (modal) modal.classList.remove("show");
     }
 
-    document.getElementById("cancelEdit")?.addEventListener("click", closeEditModal);
-    document.getElementById("closeModal")?.addEventListener("click", closeEditModal);
+    document.getElementById("cancelEdit")?.addEventListener("click", () => closeModal("editModal"));
+    document.getElementById("closeModal")?.addEventListener("click", () => closeModal("editModal"));
     
     document.getElementById("editForm").addEventListener("submit", e => {
         e.preventDefault();
@@ -264,7 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const modal = document.getElementById("editModal");
 
         if (modal.dataset.viewOnly === "true") {
-            modal.classList.remove("show");
+            closeModal("editModal");
             delete modal.dataset.viewOnly;
             return;
         }
@@ -299,12 +303,13 @@ document.addEventListener("DOMContentLoaded", () => {
         updateFilterCounts();
         showNotification("Task Edited Successfully!!"); 
 
-        document.getElementById("editModal").classList.remove("show");
+        closeModal("editModal");
     });
 
     document.addEventListener("click",e=>{
         if(e.target.classList.contains("delete-btn")){
             deleteTask(e.target);
+            return;
         }
         if (e.target.classList.contains("edit-btn")) {
             const card = e.target.closest(".task-card");
@@ -315,12 +320,110 @@ document.addEventListener("DOMContentLoaded", () => {
             const existsinLS = taskId && tasks.some(t => t.id === taskId);
 
             if (existsinLS) {
-                openEditModal(card);    
+                openEditModal(card);
             } else {
                 staticCardView(card);
             }
+            return;
         }
+            
+        const card = e.target.closest(".task-card");
+        if (card && !e.target.closest(".card-actions")) {
+            openViewModal(card);
+        }
+    });
 
+    function openViewModal(card) {
+        const taskId = card.dataset.id;
+        
+        const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+        const task = tasks.find(t => t.id === taskId);
+        
+        if (task && task.data) {
+            const data = task.data;
+            const formattedDate = new Date(data.date).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric"
+            });
+            
+            document.getElementById("viewTaskName").textContent = data.taskName || "Not provided";
+            document.getElementById("viewUserName").textContent = data.userName || "Not provided";
+            document.getElementById("viewEmail").textContent = data.email || "Not provided";
+            document.getElementById("viewDate").textContent = formattedDate || "Not provided";
+            document.getElementById("viewTime").textContent = data.time || "Not specified";
+            
+            const priorityKey = data.priority.toLowerCase().replace(" priority", "");
+            const priorityBadge = `<span class="badge badge-${priorityKey}">● ${data.priority.split(" ")[0].toUpperCase()}</span>`;
+            document.getElementById("viewPriority").innerHTML = priorityBadge;
+            
+            document.getElementById("viewEstimation").textContent = data.estimatedHours ? `${data.estimatedHours} hours` : "Not specified";
+            
+            if (data.projectUrl) {
+                document.getElementById("viewProject").innerHTML = `<a href="${data.projectUrl}" target="_blank" rel="noopener noreferrer">${data.projectUrl}</a>`;
+            } else {
+                document.getElementById("viewProject").textContent = "Not provided";
+            }
+            
+            document.getElementById("viewProgress").textContent = `${data.progress || 0}%`;
+            
+            const taskTypes = data.taskType.join(", ") || "Not specified";
+            document.getElementById("viewTaskType").textContent = taskTypes;
+            
+            const statusKey = data.status.toLowerCase().replace("in ", "");
+            const statusBadge = `<span class="badge badge-${statusKey}"><span class="dot-${statusKey}">●</span> ${data.status}</span>`;
+            document.getElementById("viewStatus").innerHTML = statusBadge;
+            
+            document.getElementById("viewDescription").textContent = data.description || "No description provided.";
+        } else {
+            const title = card.querySelector(".task-title")?.textContent.trim() || "Not provided";
+            const description = card.querySelector(".task-description")?.textContent.trim() || "No description provided.";
+            const userName = card.querySelector(".user-name")?.textContent.replace("👤", "").trim() || "Not provided";
+            const dateText = card.querySelector(".date-time")?.textContent.replace("📅 Due:", "").trim() || "";
+            
+            document.getElementById("viewTaskName").textContent = title;
+            document.getElementById("viewUserName").textContent = userName;
+            document.getElementById("viewEmail").textContent = "Not available";
+            document.getElementById("viewDate").textContent = dateText || "Not provided";
+            document.getElementById("viewTime").textContent = "Not specified";
+            
+            const priorityKey = getPriority(card);
+            const priorityMap = {
+                high: "High Priority",
+                medium: "Medium Priority",
+                low: "Low Priority"
+            };
+            const priorityBadge = `<span class="badge badge-${priorityKey}">● ${priorityMap[priorityKey]?.split(" ")[0].toUpperCase() || "MEDIUM"}</span>`;
+            document.getElementById("viewPriority").innerHTML = priorityBadge;
+            
+            document.getElementById("viewEstimation").textContent = "Not specified";
+            document.getElementById("viewProject").textContent = "Not provided";
+            document.getElementById("viewProgress").textContent = "0%";
+            document.getElementById("viewTaskType").textContent = "Not specified";
+            
+            const statusValue = getStatus(card);
+            const statusKey = statusValue.toLowerCase().replace("in ", "");
+            const statusBadge = `<span class="badge badge-${statusKey}"><span class="dot-${statusKey}">●</span> ${statusValue}</span>`;
+            document.getElementById("viewStatus").innerHTML = statusBadge;
+            
+            document.getElementById("viewDescription").textContent = description;
+        }
+        
+        openModal("viewModal");
+    }
+
+    document.getElementById("closeViewModal")?.addEventListener("click", () => closeModal("viewModal"));
+    
+    document.getElementById("viewModal")?.addEventListener("click", (e) => {
+        if (e.target.id === "viewModal") {
+            closeModal("viewModal");
+        }
+    });
+    
+    document.getElementById("editModal")?.addEventListener("click", (e) => {
+        if (e.target.id === "editModal") {
+            closeModal("editModal");
+        }
     }); 
 
     function staticCardView(card) {
@@ -355,8 +458,7 @@ document.addEventListener("DOMContentLoaded", () => {
             low: "Low Priority"
         };
 
-        document.getElementById("editPriority").value =
-            priorityMap[priorityKey] || "Low Priority";
+        document.getElementById("editPriority").value = priorityMap[priorityKey] || "Low Priority";
 
         document.getElementById("editEstimation").value="";
         document.getElementById("editProject").value="";
@@ -374,12 +476,9 @@ document.addEventListener("DOMContentLoaded", () => {
             statusRadio.checked = true;
         }
 
-        
         document.getElementById("editTaskId").value = "";
-
         modal.dataset.viewOnly = "true";
-
-        modal.classList.add("show");
+        openModal("editModal");
     }
 
     function getStatus(card) {

@@ -56,8 +56,6 @@
                         <label class="form-align">Task Progress</label>
                         <input type="range" min="0" max="100" value="0" class="progress-slider" title="Drag to change progress">
                         <div class="progress-text">0%</div>
-                        <!-- <label class="form-align">Task Color</label>
-                        <input type="color" class="form-input-color"> -->
                         <label class="form-label1">Task Type</label>
                         <div class="task-type">
                             <div><label><input type="checkbox" class="task-check" name="taskType" value="Bug Fix"> Bug Fix</label></div>
@@ -70,13 +68,6 @@
                             <div><label><input type="radio" name="status" class="task-check" value="In Progress"> In Progress</label></div>
                             <div><label><input type="radio" name="status" class="task-check" value="Completed"> Completed</label></div>
                         </div>
-                        <!-- <div class="file-upload">
-                            <label for="fileInput" class="file-attach">
-                                🔗 Click to upload attachments<br>
-                                <span><small>Supported: PDF, DOC, Images</small></span>
-                                <input type="file" id="fileInput" accept=".pdf,.doc,.docx,image/*" multiple hidden> 
-                            </label>
-                        </div> -->
                         <div class="form-buttons">
                             <button type="submit" class="create-btn">✓ Create Task</button>
                             <button type="reset" class="reset-btn">✗ Reset</button>
@@ -245,8 +236,8 @@
 
                     <div class="form-grid">
                         <div>
-                        <label>Task Name</label>
-                        <input type="text" id="editTaskName" required>
+                            <label>Task Name</label>
+                            <input type="text" id="editTaskName" required>
                         </div>
 
                         <div>
@@ -255,27 +246,27 @@
                         </div>
 
                         <div>
-                        <label>Email</label>
-                        <input type="email" id="editEmail" required>
+                            <label>Email</label>
+                            <input type="email" id="editEmail" required>
                         </div>
 
                         <div>
-                        <label>Due Date</label>
-                        <input type="date" id="editDate" required>
+                            <label>Due Date</label>
+                            <input type="date" id="editDate" required>
                         </div>
 
                         <div>
-                        <label>Time</label>
-                        <input type="time" id="editTime">
+                            <label>Time</label>
+                            <input type="time" id="editTime">
                         </div>
 
                         <div>
-                        <label>Priority</label>
-                        <select id="editPriority" required>
-                            <option value="High Priority">High Priority</option>
-                            <option value="Medium Priority">Medium Priority</option>
-                            <option value="Low Priority">Low Priority</option>
-                        </select>
+                            <label>Priority</label>
+                            <select id="editPriority" required>
+                                <option value="High Priority">High Priority</option>
+                                <option value="Medium Priority">Medium Priority</option>
+                                <option value="Low Priority">Low Priority</option>
+                            </select>
                         </div>
                         <div>
                             <label>Estimated Hours</label>
@@ -319,6 +310,66 @@
                         <button type="button" class="btn-cancel" id="cancelEdit">Cancel</button>
                     </div>
                 </form>
+            </div>
+        </div>
+        <div class="modal-overlay" id="viewModal">
+            <div class="modal modal-view">
+                <div class="modal-header">
+                    <h2>Task Details</h2>
+                    <button class="close-btn" id="closeViewModal">✖</button>
+                </div>
+                <div class="modal-body-view">
+                    <div class="view-details-grid">
+                        <div class="view-detail-item">
+                            <span class="view-label">Task Name</span>
+                            <span class="view-value" id="viewTaskName"></span>
+                        </div>
+                        <div class="view-detail-item">
+                            <span class="view-label">User Name</span>
+                            <span class="view-value" id="viewUserName"></span>
+                        </div>
+                        <div class="view-detail-item">
+                            <span class="view-label">Email</span>
+                            <span class="view-value" id="viewEmail"></span>
+                        </div>
+                        <div class="view-detail-item">
+                            <span class="view-label">Due Date</span>
+                            <span class="view-value" id="viewDate"></span>
+                        </div>
+                        <div class="view-detail-item">
+                            <span class="view-label">Due Time</span>
+                            <span class="view-value" id="viewTime"></span>
+                        </div>
+                        <div class="view-detail-item">
+                            <span class="view-label">Priority</span>
+                            <span class="view-value" id="viewPriority"></span>
+                        </div>
+                        <div class="view-detail-item">
+                            <span class="view-label">Estimated Hours</span>
+                            <span class="view-value" id="viewEstimation"></span>
+                        </div>
+                        <div class="view-detail-item">
+                            <span class="view-label">Project URL</span>
+                            <span class="view-value" id="viewProject"></span>
+                        </div>
+                        <div class="view-detail-item">
+                            <span class="view-label">Progress</span>
+                            <span class="view-value" id="viewProgress"></span>
+                        </div>
+                        <div class="view-detail-item">
+                            <span class="view-label">Task Type</span>
+                            <span class="view-value" id="viewTaskType"></span>
+                        </div>
+                        <div class="view-detail-item">
+                            <span class="view-label">Status</span>
+                            <span class="view-value" id="viewStatus"></span>
+                        </div>
+                        <div class="view-detail-item full-width">
+                            <span class="view-label">Description</span>
+                            <span class="view-value" id="viewDescription"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="notification" class="notification"></div>

@@ -46,7 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
 
         const taskData = taskFormData(taskForm);
-        if(!taskData.isValid) return;
         const taskId = Date.now().toString();
         const taskCard = createTask(taskData, taskId);
         tasksGrid.appendChild(taskCard);
@@ -121,8 +120,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const description = form.querySelector("textarea").value.trim();
         const status = form.querySelector("input[name='status']:checked")?.value || "Pending";
         const progress = Number.parseInt(form.querySelector(".progress-slider")?.value ?? "0", 10) || 0;
-        const taskType = Array.from(form.querySelectorAll("input[name='taskType']:checked")).map(el => el.value);
+        const taskType = [];
+        const checked = form.querySelectorAll("input[name='taskType']:checked");
 
+        for (let i = 0; i < checked.length; i++) {
+            taskType.push(checked[i].value);
+        }
+        
         return {
             taskName,
             userName,
@@ -135,8 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
             description,
             status,
             progress,
-            taskType,
-            isValid: taskName && userName && email && date && priority
+            taskType
         };
     }
 
@@ -243,8 +246,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         const editStatus = task.data.status || "Pending";
-        const statusRadio = document.querySelector(`#editTaskStatus input[type="radio"][value="${CSS.escape(editStatus)}"]`);
-        if (statusRadio) statusRadio.checked = true;
+        const radios = document.querySelectorAll('input[name="editStatus"]');
+
+        for (let i = 0; i < radios.length; i++) {
+            if (radios[i].value === editStatus) {
+                radios[i].checked = true;
+            } else {
+                radios[i].checked = false;
+            }
+        }
 
         openModal("editModal");
     }
@@ -458,26 +468,28 @@ document.addEventListener("DOMContentLoaded", () => {
             low: "Low Priority"
         };
 
-        document.getElementById("editPriority").value = priorityMap[priorityKey] || "Low Priority";
+        document.getElementById("editPriority").value =
+            priorityMap[priorityKey] || "Low Priority";
 
         document.getElementById("editEstimation").value="";
         document.getElementById("editProject").value="";
         
         const statusValue = getStatus(card);
 
-        document.querySelectorAll('input[name="editStatus"]')
-            .forEach(radio => (radio.checked = false));
+        const radios = document.querySelectorAll('input[name="editStatus"]');
 
-        const statusRadio = document.querySelector(
-            `input[name="editStatus"][value="${CSS.escape(statusValue)}"]`
-        );
-
-        if (statusRadio) {
-            statusRadio.checked = true;
+        for (let i = 0; i < radios.length; i++) {
+            if (radios[i].value === statusValue) {
+                radios[i].checked = true;
+            } else {
+                radios[i].checked = false;
+            }
         }
 
         document.getElementById("editTaskId").value = "";
+
         modal.dataset.viewOnly = "true";
+
         openModal("editModal");
     }
 

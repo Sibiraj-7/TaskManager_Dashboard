@@ -207,17 +207,18 @@ document.addEventListener("DOMContentLoaded", () => {
         const card = button.closest(".task-card");
         if (!card) return;
 
-        const confirmDelete = confirm("Are you sure you want to delete this task?");
+        const key = card.dataset.id;
+        let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+        const tasktodel = tasks.find(task => task.id === key);
+        const taskname = tasktodel?tasktodel.data.taskName:card.querySelector(".task-title").textContent.trim();
+        const confirmDelete = confirm(`Are you sure you want to delete the task "${taskname}" ?`);
         if (!confirmDelete) return;
 
-        const key = card.dataset.id;
-
-        let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
         tasks = tasks.filter(task => task.id !== key);
         localStorage.setItem("tasks", JSON.stringify(tasks));
         card.remove();
         updateFilterCounts();
-        showNotification("Task deleted Successfully!!");
+        showNotification(`${taskname} task deleted Successfully!!`);
     }
     
     function openEditModal(card) {

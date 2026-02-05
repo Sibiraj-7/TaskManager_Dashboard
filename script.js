@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+    document.getElementById("year").textContent = new Date().getFullYear();
     const filterButtons = document.querySelectorAll(".filter-btn");
     const tasksGrid = document.querySelector(".tasks-grid");
     const taskCards = document.querySelectorAll(".tasks-grid .task-card");
@@ -95,16 +96,15 @@ document.addEventListener("DOMContentLoaded", () => {
         filterButtons.forEach(button => {
             const buttonText = button.textContent.trim();
             const baseText = buttonText.split(' ')[0];
-            
-            if(baseText.toLowerCase() === "all"){
-                button.textContent = `All (${counts.all})`;
-            } else if(baseText.toLowerCase() === "high"){
-                button.textContent = `High (${counts.high})`;
-            } else if(baseText.toLowerCase() === "medium"){
-                button.textContent = `Medium (${counts.medium})`;
-            } else if(baseText.toLowerCase() === "low"){
-                button.textContent = `Low (${counts.low})`;
+            function filterCount(baseText,type){
+                if(baseText.toLowerCase()==type){
+                    button.textContent = `${baseText} (${counts[type]})`;
+                }
             }
+            filterCount(baseText,'all');
+            filterCount(baseText,'high');
+            filterCount(baseText,'medium');
+            filterCount(baseText,'low');
         });
     }
 
@@ -210,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const key = card.dataset.id;
         let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
         const tasktodel = tasks.find(task => task.id === key);
-        const taskname = tasktodel?tasktodel.data.taskName:card.querySelector(".task-title").textContent.trim();
+        const taskname = tasktodel ? tasktodel.data.taskName : card.querySelector(".task-title").textContent.trim();
         const confirmDelete = confirm(`Are you sure you want to delete the task "${taskname}" ?`);
         if (!confirmDelete) return;
 

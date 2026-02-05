@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         tasksGrid.appendChild(card);
     });
     updateFilterCounts();
+    updatePlaceholder();
 
     taskForm.addEventListener("submit",e =>{
         e.preventDefault();
@@ -53,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
         storeTask(taskData, taskId);
         applyActiveFilter(taskCard);
         updateFilterCounts();
+        updatePlaceholder();
         showNotification("Task created successfully!!");
         taskForm.reset();
         if (progressSlider) progressSlider.value = 0;
@@ -106,6 +108,13 @@ document.addEventListener("DOMContentLoaded", () => {
             filterCount(baseText,'medium');
             filterCount(baseText,'low');
         });
+    }
+
+    function updatePlaceholder() {
+        const placeholder = document.getElementById("taskPlaceholder");
+        if (!placeholder || !tasksGrid) return;
+        const cardCount = tasksGrid.querySelectorAll(".task-card").length;
+        placeholder.style.display = cardCount === 0 ? "flex" : "none";
     }
 
     function taskFormData(form){
@@ -218,6 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("tasks", JSON.stringify(tasks));
         card.remove();
         updateFilterCounts();
+        updatePlaceholder();
         showNotification(`${taskname} task deleted Successfully!!`);
     }
     

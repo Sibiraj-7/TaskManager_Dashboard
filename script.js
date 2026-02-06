@@ -211,25 +211,44 @@ document.addEventListener("DOMContentLoaded", () => {
             card.style.display = "none";
         }
     }
-
+    
+    let taskDelete = null;
     function deleteTask(button) {
         const card = button.closest(".task-card");
         if (!card) return;
+        taskDelete = card;
 
         const key = card.dataset.id;
         let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
         const tasktodel = tasks.find(task => task.id === key);
-        const taskname = tasktodel ? tasktodel.data.taskName : card.querySelector(".task-title").textContent.trim();
-        const confirmDelete = confirm(`Are you sure you want to delete the task "${taskname}" ?`);
-        if (!confirmDelete) return;
+        const taskname = tasktodel.data.taskName;
+        
+        document.getElementById("deleteMessage").textContent = `Are you sure you want to delete the task "${taskname}" ?`;
+        openModal('delete-popup');
+    }
 
+    document.getElementById("confirm-delete-btn").addEventListener('click',() => {
+        if(!taskDelete) return;
+        const key = taskDelete.dataset.id;
+        let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
         tasks = tasks.filter(task => task.id !== key);
-        localStorage.setItem("tasks", JSON.stringify(tasks));
-        card.remove();
+        localStorage.setItem('tasks',JSON.stringify(tasks));
+        taskDelete.remove();
+        taskDelete = null;
+        closeModal('delete-popup');
         updateFilterCounts();
         updatePlaceholder();
-        showNotification(`${taskname} task deleted Successfully!!`);
-    }
+        showNotification("Task deleted Successfully!!");
+    });
+    document.getElementById("cancel-delete-btn").addEventListener("click", () => {
+        closeModal("delete-popup");
+        taskDelete = null;
+    });
+    document.getElementById("delete-popup").addEventListener("click", e => {
+        if (e.target.id === "delete-popup") {
+            closeModal("delete-popup");
+        }
+    });
     
     function openEditModal(card) {
         const taskId = card.dataset.id;

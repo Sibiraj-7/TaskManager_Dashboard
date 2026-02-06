@@ -3,11 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("year").textContent = new Date().getFullYear();
     const filterButtons = document.querySelectorAll(".filter-btn");
     const tasksGrid = document.querySelector(".tasks-grid");
-    const taskCards = document.querySelectorAll(".tasks-grid .task-card");
-
-    taskCards.forEach(card => {
-        card.dataset.priority = getPriority(card);
-    });
 
     filterButtons.forEach(button => {
         button.addEventListener("click",() => {
@@ -211,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
             card.style.display = "none";
         }
     }
-    
+
     let taskDelete = null;
     function deleteTask(button) {
         const card = button.closest(".task-card");
@@ -361,8 +356,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (existsinLS) {
                 openEditModal(card);
-            } else {
-                staticCardView(card);
             }
             return;
         }
@@ -415,38 +408,6 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("viewStatus").innerHTML = statusBadge;
             
             document.getElementById("viewDescription").textContent = data.description || "No description provided.";
-        } else {
-            const title = card.querySelector(".task-title")?.textContent.trim() || "Not provided";
-            const description = card.querySelector(".task-description")?.textContent.trim() || "No description provided.";
-            const userName = card.querySelector(".user-name")?.textContent.replace("👤", "").trim() || "Not provided";
-            const dateText = card.querySelector(".date-time")?.textContent.replace("📅 Due:", "").trim() || "";
-            
-            document.getElementById("viewTaskName").textContent = title;
-            document.getElementById("viewUserName").textContent = userName;
-            document.getElementById("viewEmail").textContent = "Not available";
-            document.getElementById("viewDate").textContent = dateText || "Not provided";
-            document.getElementById("viewTime").textContent = "Not specified";
-            
-            const priorityKey = getPriority(card);
-            const priorityMap = {
-                high: "High Priority",
-                medium: "Medium Priority",
-                low: "Low Priority"
-            };
-            const priorityBadge = `<span class="badge badge-${priorityKey}">● ${priorityMap[priorityKey]?.split(" ")[0].toUpperCase() || "MEDIUM"}</span>`;
-            document.getElementById("viewPriority").innerHTML = priorityBadge;
-            
-            document.getElementById("viewEstimation").textContent = "Not specified";
-            document.getElementById("viewProject").textContent = "Not provided";
-            document.getElementById("viewProgress").textContent = "0%";
-            document.getElementById("viewTaskType").textContent = "Not specified";
-            
-            const statusValue = getStatus(card);
-            const statusKey = statusValue.toLowerCase().replace("in ", "");
-            const statusBadge = `<span class="badge badge-${statusKey}"><span class="dot-${statusKey}">●</span> ${statusValue}</span>`;
-            document.getElementById("viewStatus").innerHTML = statusBadge;
-            
-            document.getElementById("viewDescription").textContent = description;
         }
         
         openModal("viewModal");
@@ -465,70 +426,6 @@ document.addEventListener("DOMContentLoaded", () => {
             closeModal("editModal");
         }
     }); 
-
-    function staticCardView(card) {
-        const modal = document.getElementById("editModal");
-
-        document.getElementById("editTaskName").value =
-            card.querySelector(".task-title")?.textContent.trim() || "";
-
-        document.getElementById("editDescription").value =
-            card.querySelector(".task-description")?.textContent.trim() || "";
-
-        const userText = card.querySelector(".user-name")?.textContent || "";
-        document.getElementById("editUserName").value =
-            userText.replace("👤", "").trim();
-
-        const dateText = card.querySelector(".date-time")?.textContent || "";
-        const rawDate = dateText.replace("📅 Due:", "").trim();
-
-        const parsedDate = new Date(rawDate);
-        if (!isNaN(parsedDate)) {
-            document.getElementById("editDate").value =
-                parsedDate.toISOString().split("T")[0];
-        }
-
-        document.getElementById("editEmail").value = "";
-        document.getElementById("editTime").value = "";
-        const priorityKey = getPriority(card);
-
-        const priorityMap = {
-            high: "High Priority",
-            medium: "Medium Priority",
-            low: "Low Priority"
-        };
-
-        document.getElementById("editPriority").value =
-            priorityMap[priorityKey] || "Low Priority";
-
-        document.getElementById("editEstimation").value="";
-        document.getElementById("editProject").value="";
-        
-        const statusValue = getStatus(card);
-
-        const radios = document.querySelectorAll('input[name="editStatus"]');
-
-        for (let i = 0; i < radios.length; i++) {
-            if (radios[i].value === statusValue) {
-                radios[i].checked = true;
-            } else {
-                radios[i].checked = false;
-            }
-        }
-
-        document.getElementById("editTaskId").value = "";
-
-        modal.dataset.viewOnly = "true";
-
-        openModal("editModal");
-    }
-
-    function getStatus(card) {
-        if(card.querySelector(".badge-pending")) return "Pending";
-        if(card.querySelector(".badge-progress")) return "In Progress";
-        if(card.querySelector(".badge-completed")) return "Completed";
-        return "Pending"
-    }
 
     function showNotification(message) {
         const notify = document.getElementById("notification");

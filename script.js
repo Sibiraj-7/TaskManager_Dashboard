@@ -517,16 +517,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         card.innerHTML = `
             <div class="card-actions">
-                <button class="edit-btn" title="Edit">🖍</button>
-                <button class="delete-btn" title="Delete">🗑️</button>
+                <button class="edit-btn" title="Edit">&#128397;</button>
+                <button class="delete-btn" title="Delete">&#x1F5D1;&#xFE0F;</button>
             </div>
 
             <h3 class = "task-title">${data.taskName}</h3>
             <p class = "task-description">${data.description || "No description Provided."}</p>
             
             <div class = "task-meta">
-                <div class ="meta-item">🗓️ Due: ${formattedDate} ${data.time ? `${data.time}`: ""}</div>
-                <div class ="meta-item">👤 ${displayName}</div>
+                <div class ="meta-item">&#128197 Due: ${formattedDate} ${data.time ? `${data.time}`: ""}</div>
+                <div class ="meta-item">&#128100 ${displayName}</div>
             </div>
 
             <div class ="task-footer">

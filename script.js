@@ -1,6 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("year").textContent = new Date().getFullYear();
+    const datePick = document.getElementById("dueDate");
+    const today = new Date();
+    datePick.min = today.toISOString().split('T')[0];
+
     const filterButtons = document.querySelectorAll(".filter-btn");
     const tasksGrid = document.querySelector(".tasks-grid");
 
@@ -40,7 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
     updatePlaceholder();
 
     taskForm.addEventListener("submit",e =>{
+
         e.preventDefault();
+        if (!formValidation()) return;
 
         const taskData = taskFormData(taskForm);
         const taskId = Date.now().toString();
@@ -112,16 +118,356 @@ document.addEventListener("DOMContentLoaded", () => {
         placeholder.style.display = cardCount === 0 ? "flex" : "none";
     }
 
+    function clearAllError(){
+        document.querySelectorAll(".error-message").forEach(error => {
+            error.textContent = '';
+        });
+    }
+
+    taskForm.addEventListener('reset',clearAllError);
+    
+    function setError(id,message){
+        document.getElementById(id).textContent = 'ⓘ ' + message;
+    }
+
+    function clearError(id){
+        document.getElementById(id).textContent = '';
+    }
+
+    const userNameBox = document.getElementById("userName");
+    const taskNameBox = document.getElementById("taskName");
+    const emailBox = document.getElementById("email");
+    const dateBox = document.getElementById("dueDate");
+    const timeBox = document.getElementById("dueTime");
+    const estimatedHoursBox = document.getElementById("estimatedHours");
+    const projectUrlBox = document.getElementById("projectUrl");
+    const descriptionBox =  document.getElementById("taskDescription");
+    const priorityBox = document.querySelector(".task-form select");
+
+    //Live error message deleting
+    userNameBox.addEventListener("input", () => clearError('user-error'));
+    taskNameBox.addEventListener("input", () => clearError('task-error'));
+    emailBox.addEventListener("input", () => clearError('email-error'));
+    dateBox.addEventListener("change", () => clearError('date-error'));
+    timeBox.addEventListener("change", () => clearError('time-error'));
+    estimatedHoursBox.addEventListener("input", () => clearError('estimate-error'));
+    projectUrlBox.addEventListener("input", () => clearError('project-error'));
+    descriptionBox.addEventListener("input", () => clearError('description-error'));
+    priorityBox.addEventListener("change", () => clearError('priority-error'));
+    document.querySelectorAll("input[name='taskType']").forEach(check => {
+        check.addEventListener("change", () => clearError("tasktype-error"));
+    });  
+    document.querySelectorAll("input[name='status']").forEach(radio => {
+        radio.addEventListener("change", () => clearError("status-error"));
+    });
+    const userNameRegex = /^[A-Za-z ]+$/;
+    const taskNameRegex = /^[A-Za-z0-9 ]+$/;
+    const emailRegex = /^[A-Za-z0-9.]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$/;
+
+    let isValid = true;
+    let firstError = null;
+
+    function userNameValidate(userName,userError,userBox){
+        if(!userName){
+            setError(userError,"Assignee Name is required");
+            firstError ??= userBox;
+            isValid = false;
+        }
+        else if(!userNameRegex.test(userName)){
+            setError(userError,'Assignee Name must not contain any special characters or numbers.');
+            firstError ??= userBox;
+            isValid = false;
+        }
+        else if(userName.length < 3){
+            setError(userError," Assignee Name must be 3 characters or more");
+            firstError ??= userBox;
+            isValid = false;
+        }
+        else{
+            clearError(userError);
+        }
+    }
+
+    function taskNameValidate(taskName,taskError,taskBox){
+        if(!taskName){
+            setError(taskError, "Task Name is required");
+            firstError ??= taskBox;
+            isValid = false;
+        }
+        else if(!taskNameRegex.test(taskName)){
+            setError(taskError,"Task Name must not contain any special characters.");
+            firstError ??= taskBox;
+            isValid = false;
+        }
+        else if(taskName.length < 3) {
+            setError(taskError, " TaskName must be 3 characters or more");
+            firstError ??= taskBox;
+            isValid = false;
+        }
+        else{
+            clearError(taskError);
+        }
+    }
+
+    function emailValidate(email,emailError,emailBox){
+        if(!email){
+            setError(emailError,'Email is required');
+            firstError ??= emailBox;
+            isValid = false;
+        }
+        else if(!emailRegex.test(email)){
+            setError(emailError,"Enter an Valid email. Eg: abcd@gmail.com");
+            firstError ??= emailBox;
+            isValid = false;
+        }
+        else{
+            clearError(emailError);
+        }
+    }
+
+    function dateValidate(date,dateError,dateBox){
+        if(!date){
+            setError(dateError, 'Date is required');
+            firstError ??= dateBox;
+            isValid = false;
+        }
+        else{
+            clearError(dateError);
+        }
+    }
+
+    function timeValidate(time,timeError,nowDatetime,timeBox){
+        if(!time){
+            setError(timeError,'Time is required');
+            firstError ??= timeBox;
+            isValid = false;
+        }
+        else if(nowDatetime < today){
+            setError(timeError,"Time can't be assigned in past");
+            firstError ??= timeBox;
+            isValid = false;
+        }
+        else{
+            clearError(timeError);
+        }
+    }
+
+    function estimateValidate(estimatedHours,estimateError,estimatedHoursBox){
+        if(!estimatedHours){
+            setError(estimateError,'Estimated Hours is required');
+            firstError ??= estimatedHoursBox;
+            isValid = false;
+        }
+        else if(estimatedHours < 1){
+            setError(estimateError,'Estimated hours must be at least 1 hour.');
+            firstError ??= estimatedHoursBox;
+            isValid = false;
+        }
+        else{
+            clearError(estimateError);
+        }
+    }
+
+    function projectUrlValidate(projectUrl,projectError,projectUrlBox){
+        if(!projectUrl){
+            setError(projectError,'Project URL is required');
+            firstError ??= projectUrlBox;
+            isValid = false;
+        }
+        else if(projectUrl){
+            try{
+                new URL(projectUrl);
+                clearError(projectError);
+            }catch{
+                setError(projectError,'Enter a valid URL');
+                firstError ??= projectUrlBox;
+                isValid = false;
+            }
+        }
+        else{
+            clearError(projectError);
+        }
+    }
+
+    function descriptionValidate(description,descriptionError,descriptionBox){
+        if(!description){
+            setError(descriptionError,"Task Description is required");
+            firstError ??= descriptionBox;
+            isValid = false;
+        }
+        else{
+            clearError(descriptionError);
+        }
+    }
+
+    function priorityValidate(priority,priorityError,priorityBox){
+        if(priority.length === 0){
+            setError(priorityError,'Select a priority Level');
+            firstError ??= priorityBox;
+            isValid = false;
+        }
+        else{
+            clearError(priorityError);
+        }
+    }
+
+    function taskTypeValidate(taskTypes,valueError,valueBox){
+        if(taskTypes.length === 0){
+            setError(valueError,"Select a Task type");
+            firstError ??= document.querySelector(valueBox);
+            isValid = false;
+        }
+        else{
+            clearError(valueError);
+        }
+    }
+
+    function statusValidate(status,valueError,valueBox){
+        if(status.length === 0){
+            setError(valueError,"Select a Status");
+            firstError ??= document.querySelector(valueBox);
+            isValid = false;
+        }
+        else{
+            clearError(valueError);
+        }
+    }
+
+    function focusIntoFirstError(){
+        if (firstError) {
+            firstError.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+
+            setTimeout(() => {
+                firstError.focus();
+            }, 300);
+        }
+    }
+
+    function formValidation(){
+
+        isValid = true;
+        firstError = null;
+
+        const userName = userNameBox.value.trim();
+        const taskName = taskNameBox.value.trim();
+        const email = emailBox.value.trim();
+        const date = dateBox.value.trim();
+        const time = timeBox.value.trim();
+        const priority = priorityBox.value;
+        const estimatedHours = estimatedHoursBox.value.trim();
+        const projectUrl = projectUrlBox.value.trim();
+        const description = descriptionBox.value.trim();
+        const nowDatetime = new Date(`${date}T${time}`);
+
+        const taskTypes = document.querySelectorAll("input[name='taskType']:checked");
+        const status = document.querySelectorAll("input[name='status']:checked");
+
+        userNameValidate(userName,'user-error',userNameBox);
+
+        taskNameValidate(taskName,'task-error',taskNameBox);
+
+        emailValidate(email,'email-error',emailBox);
+
+        dateValidate(date,'date-error',dateBox);
+
+        timeValidate(time,'time-error',nowDatetime,timeBox);
+
+        priorityValidate(priority,'priority-error',priorityBox);
+
+        estimateValidate(estimatedHours,'estimate-error',estimatedHoursBox);
+
+        projectUrlValidate(projectUrl,'project-error',projectUrlBox);
+
+        descriptionValidate(description,'description-error',descriptionBox);
+
+        taskTypeValidate(taskTypes,'tasktype-error','.task-type');
+
+        statusValidate(status,'status-error','.task-status');
+
+        focusIntoFirstError();
+
+        return isValid;
+    }
+
+    //Edit Form Validation
+    const editDatePick = document.getElementById('editDate');
+    editDatePick.min = today.toISOString().split('T')[0];
+
+    const editUserNameBox = document.getElementById("editUserName");
+    const editTaskNameBox = document.getElementById("editTaskName");
+    const editEmailBox = document.getElementById("editEmail");
+    const editDateBox = document.getElementById("editDate");
+    const editTimeBox = document.getElementById("editTime");
+    const editEstimatedHoursBox = document.getElementById("editEstimation");
+    const editProjectUrlBox = document.getElementById("editProject");
+    const editDescriptionBox =  document.getElementById("editDescription");
+    const editPriorityBox = document.getElementById("editPriority");
+
+    //Live error message deleting
+    editUserNameBox.addEventListener("input", () => clearError('editUserError'));
+    editTaskNameBox.addEventListener("input", () => clearError('editTaskError'));
+    editEmailBox.addEventListener("input", () => clearError('editEmailError'));
+    editDateBox.addEventListener("change", () => clearError('editDateError'));
+    editTimeBox.addEventListener("change", () => clearError('editTimeError'));
+    editEstimatedHoursBox.addEventListener("input", () => clearError('editEstimateError'));
+    editProjectUrlBox.addEventListener("input", () => clearError('editProjectError'));
+    editDescriptionBox.addEventListener("input", () => clearError('editDescriptionError'));
+    editPriorityBox.addEventListener("change", () => clearError('editPriorityError'));
+    document.querySelectorAll("input[name='editTaskType']").forEach(check => {
+        check.addEventListener("change", () => clearError("editTasktypeError"));
+    });  
+    document.querySelectorAll("input[name='editStatus']").forEach(radio=> {
+        radio.addEventListener('change', () => clearError('editStatusError'))
+    })
+
+    function editFormValidation(){
+        isValid = true;
+        firstError = null;
+
+        const userName = editUserNameBox.value.trim();
+        const taskName = editTaskNameBox.value.trim();
+        const email = editEmailBox.value.trim();
+        const date = editDateBox.value.trim();
+        const time = editTimeBox.value.trim();
+        const priority = editPriorityBox.value;
+        const estimatedHours = editEstimatedHoursBox.value.trim();
+        const projectUrl = editProjectUrlBox.value.trim();
+        const description =  editDescriptionBox.value.trim();
+        const nowDatetime = new Date (`${date}T${time}`);
+
+        const taskTypes = document.querySelectorAll("input[name='editTaskType']:checked");
+        const status = document.querySelectorAll("input[name='editStatus']:checked");
+
+        userNameValidate(userName,'editUserError',editUserNameBox);
+        taskNameValidate(taskName,'editTaskError',editTaskNameBox);
+        emailValidate(email,'editEmailError',editEmailBox);
+        dateValidate(date,'editDateError',editDateBox);
+        timeValidate(time,'editTimeError',nowDatetime,editTimeBox);
+        priorityValidate(priority,'editPriorityError',editPriorityBox);
+        estimateValidate(estimatedHours,'editEstimateError',editEstimatedHoursBox);
+        projectUrlValidate(projectUrl,'editProjectError',editProjectUrlBox);
+        descriptionValidate(description,'editDescriptionError',editDescriptionBox);
+        taskTypeValidate(taskTypes,'editTasktypeError','.task-type-modal');
+        statusValidate(status,'editStatusError','.edit-status-modal');
+        
+        focusIntoFirstError();
+
+        return isValid;
+    }
+
     function taskFormData(form){
         const taskName = form.querySelector("#taskName").value.trim();
         const userName = form.querySelector("#userName").value.trim();
-        const email = form.querySelector("input[type='email']").value.trim();
-        const date = form.querySelector("input[type='date']").value;
-        const time = form.querySelector("input[type='time']").value;
-        const estimatedHours = form.querySelector("input[type='number']").value;
-        const projectUrl = form.querySelector("input[type='url']").value;
+        const email = form.querySelector("#email").value.trim();
+        const date = form.querySelector("#dueDate").value;
+        const time = form.querySelector("#dueTime").value;
+        const estimatedHours = form.querySelector("#estimatedHours").value;
+        const projectUrl = form.querySelector("#projectUrl").value;
         const priority = form.querySelector("select").value;
-        const description = form.querySelector("textarea").value.trim();
+        const description = form.querySelector("#taskDescription").value.trim();
         const status = form.querySelector("input[name='status']:checked")?.value || "Pending";
         const progress = Number.parseInt(form.querySelector(".progress-slider")?.value ?? "0", 10) || 0;
         const taskType = [];
@@ -325,6 +671,8 @@ document.addEventListener("DOMContentLoaded", () => {
             taskType: Array.from(document.querySelectorAll("#editTaskType input[type='checkbox']:checked")).map(el => el.value)
         };
 
+        if(!editFormValidation()) return;
+
         let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
         tasks = tasks.map(t =>
             t.id === taskId ? { ...t, data: updatedData } : t
@@ -354,9 +702,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
             const existsinLS = taskId && tasks.some(t => t.id === taskId);
 
-            if (existsinLS) {
-                openEditModal(card);
-            }
+            if (existsinLS) openEditModal(card);
             return;
         }
             

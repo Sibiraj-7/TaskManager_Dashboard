@@ -27,46 +27,82 @@
                 <section class="card create-task">
                     <h2 class="card-title1"><span class="icon">📝</span>Create New Task</h2>
                     <form class="task-form">
-                        <input type="text" id="taskName" placeholder="Task Name *" class="form-input" required>
-                        <input type="text" id="userName" placeholder="User Name *" class="form-input" required>
-                        <input type="email" placeholder="Assignee Email *" class="form-input" required>
-                        <div class="input-wrapper">
-                            <label class="form-label-top">Due Date *</label>
-                            <input type="date" class="form-input" required>
+                        <div class="input-box">
+                            <input type="text" id="userName" placeholder="Assignee Name *" class="form-input">
+                            <p id="user-error" class="error-message"></p>
                         </div>
-                        <div class="input-wrapper">
-                            <label class="form-label-top">Due Time</label>
-                            <input type="time" class="form-input-normal" required>
+                        <div class="input-box">
+                            <input type="text" id="taskName" placeholder="Task Name *" class="form-input">
+                            <p id="task-error" class="error-message"></p>
                         </div>
-                        <div class="input-wrapper">
-                            <label class="form-label-top">Priority Level *</label>
-                            <select class="form-input-normal" required>
-                                <option hidden></option>
-                                <option>Low Priority</option>
-                                <option>Medium Priority</option>
-                                <option>High Priority</option>
-                            </select>
+                        <div class="input-box">
+                            <input type="text" id="email" placeholder="Assignee Email *" class="form-input">
+                            <p id="email-error" class="error-message"></p>
                         </div>
-                        <div class="input-wrapper">
-                            <label class="form-label-top">Estimated Hours</label>
-                            <input type="number" class="form-input-normal"  inputmode="numeric" onkeydown="if(['e','E','+','-'].includes(event.key)) event.preventDefault();" oninput="this.value = this.value.replace(/[^0-9]/g,'');" required>
+                        <div class="input-box">
+                            <div class="input-wrapper">
+                                <label class="form-label-top">Due Date *</label>
+                                <input type="date" id="dueDate" class="form-input">                                
+                            </div>
+                            <p id = "date-error" class="error-message"></p>
                         </div>
-                        <input type="url" placeholder="Project URL" class="form-input1" required>
-                        <textarea placeholder="Task Description" class="form-input1 form-textarea" required></textarea>
-                        <label class="form-align">Task Progress</label>
-                        <input type="range" min="0" max="100" value="0" class="progress-slider" title="Drag to change progress">
-                        <div class="progress-text">0%</div>
-                        <label class="form-label1">Task Type</label>
-                        <div class="task-type">
-                            <div><label><input type="checkbox" class="task-check" name="taskType" value="Bug Fix"> Bug Fix</label></div>
-                            <div><label><input type="checkbox" class="task-check" name="taskType" value="Feature"> Feature</label></div>
-                            <div><label><input type="checkbox" class="task-check" name="taskType" value="Enhancement"> Enhancement</label></div>
+                        <div class="input-box">
+                            <div class="input-wrapper">
+                                <label class="form-label-top">Due Time</label>
+                                <input type="time" id="dueTime" class="form-input-normal" >                                
+                            </div>
+                            <p id = "time-error" class="error-message"></p>
                         </div>
-                        <label class="form-label1">Status</label>
-                        <div class="task-status">
-                            <div><label><input type="radio" name="status" class="task-check" value="Pending"> Pending</label></div>
-                            <div><label><input type="radio" name="status" class="task-check" value="In Progress"> In Progress</label></div>
-                            <div><label><input type="radio" name="status" class="task-check" value="Completed"> Completed</label></div>
+                        <div class="input-box">
+                            <div class="input-wrapper">
+                                <label class="form-label-top">Priority Level *</label>
+                                <select class="form-input-normal">
+                                    <option value="" selected disabled hidden>-- Select an option --</option>
+                                    <option>Low Priority</option>
+                                    <option>Medium Priority</option>
+                                    <option>High Priority</option>
+                                </select>                                
+                            </div>
+                            <p id="priority-error" class="error-message"></p>
+                        </div>
+                        <div class="input-box">
+                            <div class="input-wrapper">
+                                <label class="form-label-top">Estimated Hours</label>
+                                <input type="number" id="estimatedHours" class="form-input-normal"  inputmode="numeric" onkeydown="if(['e','E','+','-'].includes(event.key)) event.preventDefault();" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                            </div>
+                            <p id="estimate-error" class="error-message"></p>
+                        </div>
+                        <div class="input-box">
+                            <input type="text" id="projectUrl" placeholder="Project URL" class="form-input1" >
+                            <p id="project-error" class="error-message"></p>
+                        </div>
+                        <div class="input-box">
+                            <textarea placeholder="Task Description" id="taskDescription" class="form-input1 form-textarea" ></textarea>
+                            <p id="description-error" class="error-message"></p>
+                        </div>
+                        <div class="input-box">
+                            <label class="form-align">Task Progress</label>
+                            <input type="range" min="0" max="100" value="0" class="progress-slider" title="Drag to change progress">
+                            <div class="progress-text">0%</div>
+                            <p id="progress-error" class="error-message"></p>
+                        </div>
+                        <div class="input-box">
+                            <label class="form-label1">Task Type</label>
+                            <div class="task-type">
+                                <div><label><input type="checkbox" class="task-check" name="taskType" value="Bug Fix"> Bug Fix</label></div>
+                                <div><label><input type="checkbox" class="task-check" name="taskType" value="Feature"> Feature</label></div>
+                                <div><label><input type="checkbox" class="task-check" name="taskType" value="Enhancement"> Enhancement</label></div>
+                            </div>
+                            <p id="tasktype-error" class="error-message"></p>
+                        </div>
+                        <div class="input-box">
+                            <label class="form-label1">Status</label>
+                            <div class="task-status">
+                                <div><label><input type="radio" name="status" class="task-check" value="Pending"> Pending</label></div>
+                                <div><label><input type="radio" name="status" class="task-check" value="In Progress"> In Progress</label></div>
+                                <div hidden><label><input type="radio" name="status" class="task-check" value="Completed"> Completed</label></div>
+                            </div>
+                            <p id="status-error" class="error-message"></p>
                         </div>
                         <div class="form-buttons">
                             <button type="submit" class="create-btn">✓ Create Task</button>
@@ -141,45 +177,53 @@
 
                     <div class="form-grid">
                         <div>
-                            <label>Task Name</label>
-                            <input type="text" id="editTaskName" required>
+                            <label>Assignee Name</label>
+                            <input type="text" id="editUserName">
+                            <p id = "editUserError" class="editErrorMessage"></p>
                         </div>
 
                         <div>
-                            <label>User Name</label>
-                            <input type="text" id="editUserName" required>
+                            <label>Task Name</label>
+                            <input type="text" id="editTaskName">
+                            <p id = "editTaskError" class="editErrorMessage"></p>
                         </div>
 
                         <div>
                             <label>Email</label>
-                            <input type="email" id="editEmail" required>
+                            <input type="email" id="editEmail">
+                            <p id = "editEmailError" class="editErrorMessage"></p>
                         </div>
 
                         <div>
                             <label>Due Date</label>
-                            <input type="date" id="editDate" required>
+                            <input type="date" id="editDate">
+                            <p id = "editDateError" class="editErrorMessage"></p>
                         </div>
 
                         <div>
                             <label>Time</label>
-                            <input type="time" id="editTime" required>
+                            <input type="time" id="editTime">
+                            <p id = "editTimeError" class="editErrorMessage"></p>
                         </div>
 
                         <div>
                             <label>Priority</label>
-                            <select id="editPriority" required>
+                            <select id="editPriority">
                                 <option value="High Priority">High Priority</option>
                                 <option value="Medium Priority">Medium Priority</option>
                                 <option value="Low Priority">Low Priority</option>
                             </select>
+                            <p id = "editPriorityError" class="editErrorMessage"></p>
                         </div>
                         <div>
                             <label>Estimated Hours</label>
-                            <input type="number" id="editEstimation" inputmode="numeric" onkeydown="if(['e','E','+','-'].includes(event.key)) event.preventDefault();" oninput="this.value = this.value.replace(/[^0-9]/g,'');" required>
+                            <input type="number" id="editEstimation" inputmode="numeric" onkeydown="if(['e','E','+','-'].includes(event.key)) event.preventDefault();" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                            <p id = "editEstimateError" class="editErrorMessage"></p>
                         </div>
                         <div>
                             <label>Project URL</label>
-                            <input type="url" id="editProject" required>
+                            <input type="url" id="editProject">
+                            <p id = "editProjectError" class="editErrorMessage"></p>
                         </div>
                         <div>
                             <label>Task Progress</label>
@@ -188,16 +232,18 @@
                         </div>
                         <div>
                             <label>Description</label>
-                            <textarea class="task-description-modal" id="editDescription" rows="4" placeholder="Task Description" required></textarea>
+                            <textarea class="task-description-modal" id="editDescription" rows="4" placeholder="Task Description"></textarea>
+                            <p id = "editDescriptionError" class="editErrorMessage"></p>
                         </div>
 
                         <div>
                             <label>Task Type</label>
                             <div class="task-type-modal" id="editTaskType">
-                                <div><label><input type="checkbox" class="task-check-modal" value="Bug Fix"> Bug Fix</label></div>
-                                <div><label><input type="checkbox" class="task-check-modal" value="Feature"> Feature</label></div>
-                                <div><label><input type="checkbox" class="task-check-modal" value="Enhancement"> Enhancement</label></div>
+                                <div><label><input type="checkbox" name="editTaskType" class="task-check-modal" value="Bug Fix"> Bug Fix</label></div>
+                                <div><label><input type="checkbox" name="editTaskType" class="task-check-modal" value="Feature"> Feature</label></div>
+                                <div><label><input type="checkbox" name="editTaskType" class="task-check-modal" value="Enhancement"> Enhancement</label></div>
                             </div>
+                            <p id = "editTasktypeError" class="editErrorMessage"></p>
                         </div>
 
                         <div>
@@ -207,6 +253,7 @@
                                 <div><label><input type="radio" name="editStatus" class="task-check-modal" value="In Progress"> In Progress</label></div>
                                 <div><label><input type="radio" name="editStatus" class="task-check-modal" value="Completed"> Completed</label></div>
                             </div>
+                            <p id = "editStatusError" class="editErrorMessage"></p>
                         </div>
                     </div>
 
@@ -226,12 +273,12 @@
                 <div class="modal-body-view">
                     <div class="view-details-grid">
                         <div class="view-detail-item">
-                            <span class="view-label">Task Name</span>
-                            <span class="view-value" id="viewTaskName"></span>
+                            <span class="view-label">Assignee Name</span>
+                            <span class="view-value" id="viewUserName"></span>
                         </div>
                         <div class="view-detail-item">
-                            <span class="view-label">User Name</span>
-                            <span class="view-value" id="viewUserName"></span>
+                            <span class="view-label">Task Name</span>
+                            <span class="view-value" id="viewTaskName"></span>
                         </div>
                         <div class="view-detail-item">
                             <span class="view-label">Email</span>

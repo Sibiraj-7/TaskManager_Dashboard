@@ -176,7 +176,7 @@ body {
 .form-input-normal {
     width: 100%;
     max-width: 100%;
-    padding: 1.25rem 0.75rem 0.5rem 0.75rem; 
+    padding: 0.9rem 0.75rem; 
     border:1px solid #d1d3d7;
     border-radius: 8px;
     font-size: 0.95rem;
@@ -203,6 +203,14 @@ body {
     min-height: 100px;
     resize: vertical;
 }
+.form-input, .form-input1, .form-input-normal, textarea, select {
+    width: 100%;
+}
+
+.input-box .task-type, .input-box .task-status {
+    margin-top: 4px;
+}
+
 
 select.form-input {
     background-color: white;
@@ -523,7 +531,7 @@ select.form-input {
 .modal-lg {
     background: #fff;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1000px;
     max-height: 85%;
     border-radius: 12px;
     display: flex;
@@ -720,6 +728,19 @@ select.form-input {
     transform: translateX(0);
 }
 
+.input-box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.error-message , .editErrorMessage{
+    min-height: 14px;
+    font-size: 0.75rem;
+    color: #ef3636;
+}
+
 .deleteBox {
     position: fixed;
     top: 0;
@@ -910,7 +931,7 @@ select.form-input {
     .create-btn {
         flex: 1 !important;
         margin-right: 1rem !important; 
-        max-width: 400px !important;
+        max-width: 200px !important;
         height: 55px !important;
     }
 

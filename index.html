@@ -15,16 +15,18 @@
             </div>
             <input type="checkbox" id="menu-toggle" hidden>
             <label for="menu-toggle" class="menu-toggle">☰</label>
-            <nav class="nav">
-                <a href="#" class="nav-link active">Dashboard</a>
-                <a href="#" class="nav-link">Tasks</a> 
-                <a href="#" class="nav-link">Profile</a>
+            <nav class="nav" id="nav-bar">
+                <ul class="nav-list">
+                    <li><button class="nav-link active" id="nav-dashboard">Dashboard</button></li>
+                    <li><button class="nav-link" id="nav-tasks">Tasks</button></li>
+                    <li><button class="nav-link" id="nav-profile">Profile</button></li>
+                </ul>
             </nav>
         </header>
         <main class="main-content">
-            <h1 class="page-title"><span style="color:#6666d7;">| </span>Task Dashboard</h1>
-            <div class="dashboard-grid">
-                <section class="card create-task">
+            <h1 class="page-title" id="pageTitle"><span style="color:#6666d7;">| </span>Task Dashboard</h1>
+            <div class="dashboard-grid" id="dashboardGrid">
+                <section class="card create-task" id="create-task-section">
                     <h2 class="card-title1"><span class="icon">&#128221</span>Create New Task</h2>
                     <form class="task-form">
                         <div class="input-box">
@@ -105,12 +107,12 @@
                             <p id="status-error" class="error-message"></p>
                         </div>
                         <div class="form-buttons">
-                            <button type="submit" class="create-btn">✓ Create Task</button>
-                            <button type="reset" class="reset-btn">✗ Reset</button>
+                            <button type="submit" class="create-btn">&#10003 Create Task</button>
+                            <button type="reset" class="reset-btn">&#10007 Reset</button>
                         </div>
                     </form>
                 </section>
-                <section class="card active-tasks">
+                <section class="card active-tasks" id="tasks-section">
                     <div class="section-header">
                         <h2 class="card-title">
                             <span class="icon">&#9989</span>

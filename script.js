@@ -5,6 +5,35 @@ document.addEventListener("DOMContentLoaded", () => {
     const today = new Date();
     datePick.min = today.toISOString().split('T')[0];
 
+    const navLinks = document.querySelectorAll('.nav-link');
+    const pageTitle = document.getElementById('pageTitle');
+    const createTaskSection = document.getElementById('create-task-section');
+    const dashboardGrid = document.getElementById('dashboardGrid');
+
+    function showPage(page) {
+        navLinks.forEach(link => link.classList.remove('active'));
+        document.getElementById(`nav-${page}`)?.classList.add('active');
+
+        if(page === 'tasks') {
+            pageTitle.innerHTML = '<span style="color: #6666d7;">| </span>Tasks';
+            createTaskSection?.classList.add('hidden');
+            dashboardGrid?.classList.add('tasks-only');
+        }
+        else if (page === 'dashboard') {
+            pageTitle.innerHTML = '<span style="color: #6666d7;">| </span>Dashboard';
+            createTaskSection?.classList.remove('hidden');
+            dashboardGrid?.classList.remove('tasks-only');
+        }
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click',() => {
+            const page = link.id.replace('nav-','');
+            showPage(page);
+            document.getElementById('menu-toggle').checked = false;
+        });
+    });
+
     const filterButtons = document.querySelectorAll(".filter-btn");
     const tasksGrid = document.querySelector(".tasks-grid");
     let priorityFilter = 'all';
@@ -568,10 +597,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <div class ="task-footer">
                 <span class="badge badge-${priorityKey}">
-                    ● ${data.priority.split(" ")[0].toUpperCase()}
+                    &#9679 ${data.priority.split(" ")[0].toUpperCase()}
                 </span>
                 <span class="badge badge-${statusKey} badge-status">
-                    <span class="dot-${statusKey}">●</span> ${data.status}
+                    <span class="dot-${statusKey}">&#9679</span> ${data.status}
                 </span>
             </div>
         `;

@@ -13,7 +13,7 @@ body {
 }
 
 .header {
-    background-color: white;
+    background-color:    white;
     padding: 1rem 4rem;
     display: flex;
     justify-content: space-between;
@@ -33,6 +33,7 @@ body {
     background: #f3f4f6;
     padding: 6px 10px;
     border-radius: 8px;
+    border:none;
 }
 
 .logo {
@@ -62,23 +63,42 @@ body {
 
 .nav {
     display: flex;
-    gap: 2rem;
+    align-items: center;
 }
 
 .nav-link {
-    color: #86868b;
-    text-decoration: none;
+    border: none;
+    background: transparent;
     font-size: 0.95rem;
+    font-family: inherit;
+    color: #86868b;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    background-color: #e5e7eb;
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    padding: 0;
+    margin: 0;
+    align-items: center;
+}
+
+.nav-list li {
+    margin: 0;
 }
 
 .nav-link.active {
-    color: #5673c9;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 2px;
-    padding-bottom: 3px;
-    background-color: #e5e7eb;
-    border-radius: 7px;
+    color:#6366f1;
+    font-weight: 600;
+    background-color: #eef2ff;
 }
 
 .main-content {
@@ -810,6 +830,14 @@ select.form-input {
     outline: none;
 }
 
+.tasks-only {
+    grid-template-columns: 1fr;
+}
+
+.hidden {
+    display: none;
+}
+
 @media (max-width: 1024px) {
     .footer-grid {
         grid-template-columns: repeat(2, 1fr); 
@@ -869,8 +897,11 @@ select.form-input {
 
 @media (max-width: 768px) {
     .menu-toggle {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
+
     #menu-toggle:checked ~ .nav{
         display: flex;
     }
@@ -879,28 +910,44 @@ select.form-input {
         display: none;
         flex-direction: column;
         position: absolute;
-        top: 60px;
+        top: 100%;
         left: 0;
+        right: 0;
         width: 100%;
         background-color: white;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding: 10px 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        padding: 0.5rem 0;
         z-index: 998;
     }
 
-    .nav.active {
-        display: flex;
+    .nav-list {
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
+    }
+
+    .nav-list li {
+        width: 100%;
     }
 
     .nav-link {
-        padding: 10px 15px;
+        display: block;
+        width: 100%;
+        padding: 1rem 1.5rem;
         text-align: center;
-        border-bottom: 1px solid #f1f1f1;
+        border-bottom: 0;
+    }
+
+    .nav-link.active {
+        background-color: #eef2ff;
+        color:#6366f1;
     }
 
     .header {
+        flex-wrap: wrap;
         flex-direction: row;
         justify-content: space-between;
+        align-self: center;
         padding: 1rem 1.5rem;  
     }
 

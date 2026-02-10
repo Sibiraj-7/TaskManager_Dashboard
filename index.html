@@ -112,7 +112,15 @@
                 </section>
                 <section class="card active-tasks">
                     <div class="section-header">
-                        <h2 class="card-title"><span class="icon">&#9989</span>Active Tasks</h2>
+                        <h2 class="card-title">
+                            <span class="icon">&#9989</span>
+                            <select id="task-status-filter" class="status-dropdown">
+                                <option value="all">All Tasks</option>
+                                <option value="active">Active Tasks</option>
+                                <option value="pending">Pending Tasks</option>
+                                <option value="completed">Completed Tasks</option>
+                            </select>
+                        </h2>
                         <div class="filter-buttons">
                             <button class="filter-btn active">All</button>
                             <button class="filter-btn">High</button>

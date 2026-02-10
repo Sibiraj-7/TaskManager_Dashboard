@@ -801,6 +801,15 @@ select.form-input {
     font-weight: 500;
 }
 
+.status-dropdown {
+    border: none;
+    font-size: 1.2rem;
+    font-weight: 550;
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+}
+
 @media (max-width: 1024px) {
     .footer-grid {
         grid-template-columns: repeat(2, 1fr); 

@@ -7,15 +7,73 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const filterButtons = document.querySelectorAll(".filter-btn");
     const tasksGrid = document.querySelector(".tasks-grid");
+    let priorityFilter = 'all';
+    let statusFilter = 'all'
 
     filterButtons.forEach(button => {
         button.addEventListener("click",() => {
             setActiveFilter(button);
             const filterText = button.textContent.trim();
-            const baseFilter = filterText.split(' ')[0].toLowerCase();
-            filterTasks(baseFilter);
+            priorityFilter = filterText.split(' ')[0].toLowerCase();
+            allFilters();
         });
     });
+
+    const statusDropdown = document.getElementById("task-status-filter");
+
+    statusDropdown.addEventListener('change',() => {
+        statusFilter = statusDropdown.value;
+        allFilters();
+    })
+
+    function allFilters() {
+
+        let visibleCount = 0;
+        document.querySelectorAll(".tasks-grid .task-card").forEach(card => {
+            const priorityMatch = priorityFilter === 'all' || card.dataset.priority === priorityFilter;
+            const badge = card.querySelector('.badge-status');
+            const cardStatus = badge.textContent.toLowerCase();
+
+            let statusMatch = false;
+
+            if(statusFilter === 'all' ) {
+                statusMatch = true;
+            }
+            else if(statusFilter === 'active') {
+                statusMatch = cardStatus.includes('progress');
+            }
+            else if(statusFilter == 'pending') {
+                statusMatch = cardStatus.includes('pending');
+            }
+            else {
+                statusMatch = cardStatus.includes('completed');
+            }
+
+            if(priorityMatch && statusMatch) {
+                card.style.display = "";
+                visibleCount++;
+            }
+            else {
+                card.style.display = "none";
+            }
+        });
+        const placeholder = document.getElementById('taskPlaceholder');
+        const totalCards = tasksGrid.querySelectorAll('.task-card').length;
+
+        if(visibleCount === 0) {
+            placeholder.style.display = 'flex';
+
+            if(totalCards === 0){
+                placeholder.innerHTML = 'No tasks added yet &#128221;';
+            }
+            else {
+                placeholder.innerHTML = 'No tasks match the selected filters &#128270';
+            }
+        }
+        else {
+            placeholder.style.display = "none";
+        }
+    }
 
     function wireProgress(slider, text) {
         if (!slider || !text) return;
@@ -41,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
         tasksGrid.appendChild(card);
     });
     updateFilterCounts();
-    updatePlaceholder();
+    allFilters();
 
     taskForm.addEventListener("submit",e =>{
 
@@ -53,31 +111,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const taskCard = createTask(taskData, taskId);
         tasksGrid.appendChild(taskCard);
         storeTask(taskData, taskId);
-        applyActiveFilter(taskCard);
+        allFilters();
         updateFilterCounts();
-        updatePlaceholder();
         showNotification("Task created successfully!!");
         taskForm.reset();
         if (progressSlider) progressSlider.value = 0;
         if (progressText) progressText.textContent = "0%";
     });
 
-    function getPriority(card) {
-        if(card.querySelector(".badge-high")) return "high";
-        if(card.querySelector(".badge-medium")) return "medium";
-        if(card.querySelector(".badge-low")) return "low";
-        return "all";
-    }
-
     function setActiveFilter(activeBtn){
         filterButtons.forEach(btn => btn.classList.remove("active"));
         activeBtn.classList.add("active");
-    }
-
-    function filterTasks(filter){
-        document.querySelectorAll(".tasks-grid .task-card").forEach(card => {
-            card.style.display = filter === "all" || card.dataset.priority === filter ? "" : "none";
-        });
     }
 
     function updateFilterCounts(){
@@ -111,13 +155,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function updatePlaceholder() {
-        const placeholder = document.getElementById("taskPlaceholder");
-        if (!placeholder || !tasksGrid) return;
-        const cardCount = tasksGrid.querySelectorAll(".task-card").length;
-        placeholder.style.display = cardCount === 0 ? "flex" : "none";
-    }
-
     function clearAllError(){
         document.querySelectorAll(".error-message").forEach(error => {
             error.textContent = '';
@@ -127,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
     taskForm.addEventListener('reset',clearAllError);
     
     function setError(id,message){
-        document.getElementById(id).textContent = 'ⓘ ' + message;
+        document.getElementById(id).innerHTML = '&#9432 ' + message;
     }
 
     function clearError(id){
@@ -259,7 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
             isValid = false;
         }
         else if(estimatedHours < 1){
-            setError(estimateError,'Estimated hours must be at least 1 hour.');
+            setError(estimateError,'Invalid Estimated Hours');
             firstError ??= estimatedHoursBox;
             isValid = false;
         }
@@ -279,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 new URL(projectUrl);
                 clearError(projectError);
             }catch{
-                setError(projectError,'Enter a valid URL');
+                setError(projectError,'Enter a valid URL (e.g., https://example.com).');
                 firstError ??= projectUrlBox;
                 isValid = false;
             }
@@ -533,24 +570,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 <span class="badge badge-${priorityKey}">
                     ● ${data.priority.split(" ")[0].toUpperCase()}
                 </span>
-                <span class="badge badge-${statusKey}">
+                <span class="badge badge-${statusKey} badge-status">
                     <span class="dot-${statusKey}">●</span> ${data.status}
                 </span>
             </div>
         `;
 
         return card;
-    }
-
-    function applyActiveFilter(card){
-        const activeBtn = document.querySelector(".filter-btn.active");
-        if(!activeBtn) return;
-
-        const filterText = activeBtn.textContent.trim();
-        const filter = filterText.split(' ')[0].toLowerCase();
-        if(filter !== "all" && card.dataset.priority !== filter){
-            card.style.display = "none";
-        }
     }
 
     let taskDelete = null;
@@ -578,7 +604,7 @@ document.addEventListener("DOMContentLoaded", () => {
         taskDelete = null;
         closeModal('delete-popup');
         updateFilterCounts();
-        updatePlaceholder();
+        allFilters();
         showNotification("Task deleted Successfully!!");
     });
     document.getElementById("cancel-delete-btn").addEventListener("click", () => {
@@ -646,14 +672,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("editForm").addEventListener("submit", e => {
         e.preventDefault();
 
-        const modal = document.getElementById("editModal");
-
-        if (modal.dataset.viewOnly === "true") {
-            closeModal("editModal");
-            delete modal.dataset.viewOnly;
-            return;
-        }
-
         const taskId = document.getElementById("editTaskId").value;
 
         const updatedData = {
@@ -682,10 +700,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const card = document.querySelector(`.task-card[data-id="${taskId}"]`);
         const newCard = createTask(updatedData, taskId);
         card.replaceWith(newCard);
-        applyActiveFilter(newCard);
+        allFilters();
         updateFilterCounts();
         showNotification("Task Edited Successfully!!"); 
-
         closeModal("editModal");
     });
 

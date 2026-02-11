@@ -25,6 +25,9 @@
         </header>
         <main class="main-content">
             <h1 class="page-title" id="pageTitle"><span style="color:#6666d7;">| </span>Task Dashboard</h1>
+            <div class="task-search-bar hidden" id="tasksSearchBar">
+                <input type="text" id="taskSearchInput" placeholder="&#128270 Search tasks...." class="task-search-input">
+            </div>
             <div class="dashboard-grid" id="dashboardGrid">
                 <section class="card create-task" id="create-task-section">
                     <h2 class="card-title1"><span class="icon">&#128221</span>Create New Task</h2>
@@ -115,7 +118,7 @@
                 <section class="card active-tasks" id="tasks-section">
                     <div class="section-header">
                         <h2 class="card-title">
-                            <span class="icon">&#9989</span>
+                            <span class="icon" id="status-icon">&#9989</span>
                             <select id="task-status-filter" class="status-dropdown">
                                 <option value="all">All Tasks</option>
                                 <option value="active">Active Tasks</option>

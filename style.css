@@ -13,7 +13,7 @@ body {
 }
 
 .header {
-    background-color:    white;
+    background-color: white;
     padding: 1rem 4rem;
     display: flex;
     justify-content: space-between;
@@ -33,7 +33,7 @@ body {
     background: #f3f4f6;
     padding: 6px 10px;
     border-radius: 8px;
-    border:none;
+    border: none;
 }
 
 .logo {
@@ -96,7 +96,7 @@ body {
 }
 
 .nav-link.active {
-    color:#6366f1;
+    color: #6366f1;
     font-weight: 600;
     background-color: #eef2ff;
 }
@@ -338,6 +338,14 @@ select.form-input {
     font-weight: 600;
     margin-bottom: 0.75rem;
     color: #1d1d1f;
+    line-height: 1.4em;
+    min-height: 2.8em;
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
 }
 
 .task-description {
@@ -345,6 +353,12 @@ select.form-input {
     color: #86868b;
     margin-bottom: 1rem;
     line-height: 1.5;
+
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .task-meta {
@@ -838,6 +852,26 @@ select.form-input {
     display: none;
 }
 
+.task-search-bar {
+    margin-bottom: 1.5rem;
+    padding: 0 1rem;
+}
+
+.task-search-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    border: 1px solid #d1d3d7;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+}
+
+.task-search-input:focus {
+    outline: none;
+    border-color: #6366f1;
+}
+
 @media (max-width: 1024px) {
     .footer-grid {
         grid-template-columns: repeat(2, 1fr); 
@@ -873,7 +907,7 @@ select.form-input {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 690px) {
     .section-header {
         flex-direction: row; 
         justify-content: space-between; 
@@ -902,7 +936,7 @@ select.form-input {
         justify-content: center;
     }
 
-    #menu-toggle:checked ~ .nav{
+    #menu-toggle:checked ~ .nav {
         display: flex;
     }
 
@@ -935,20 +969,20 @@ select.form-input {
         width: 100%;
         padding: 1rem 1.5rem;
         text-align: center;
-        border-bottom: 0;
+        border-radius: 0;
     }
 
     .nav-link.active {
         background-color: #eef2ff;
-        color:#6366f1;
+        color: #6366f1;
     }
 
     .header {
         flex-wrap: wrap;
         flex-direction: row;
         justify-content: space-between;
-        align-self: center;
-        padding: 1rem 1.5rem;  
+        align-items: center;
+        padding: 1rem 1.5rem;
     }
 
     .page-title {

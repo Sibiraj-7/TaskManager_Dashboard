@@ -7,27 +7,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const navLinks = document.querySelectorAll('.nav-link');
     const pageTitle = document.getElementById('pageTitle');
+    const taskSearchBar = document.getElementById('tasksSearchBar');
+    const taskSearchInput = document.getElementById('taskSearchInput');
     const createTaskSection = document.getElementById('create-task-section');
-    const dashboardGrid = document.getElementById('dashboardGrid');
+    const dashboardGrid  = document.getElementById('dashboardGrid');
+    const footerSection = document.getElementById('footer-section');
 
-    function showPage(page) {
+    function showPage(page){
+
         navLinks.forEach(link => link.classList.remove('active'));
         document.getElementById(`nav-${page}`)?.classList.add('active');
 
         if(page === 'tasks') {
-            pageTitle.innerHTML = '<span style="color: #6666d7;">| </span>Tasks';
+            pageTitle.innerHTML = '<span style = "color:#6666d7;">| </span>Tasks';
             createTaskSection?.classList.add('hidden');
+            dashboardGrid?.classList.remove('hidden');
             dashboardGrid?.classList.add('tasks-only');
+            footerSection?.classList.remove('hidden');
+            taskSearchBar?.classList.remove('hidden');
         }
-        else if (page === 'dashboard') {
-            pageTitle.innerHTML = '<span style="color: #6666d7;">| </span>Dashboard';
+        else if(page === 'dashboard') {
+            pageTitle.innerHTML = '<span style = "color:#6666d7;">| </span>Task Dashboard';
             createTaskSection?.classList.remove('hidden');
             dashboardGrid?.classList.remove('tasks-only');
+            footerSection?.classList.remove('hidden');
+            taskSearchBar?.classList.add('hidden');
         }
     }
 
     navLinks.forEach(link => {
-        link.addEventListener('click',() => {
+        link.addEventListener('click', () => {
             const page = link.id.replace('nav-','');
             showPage(page);
             document.getElementById('menu-toggle').checked = false;
@@ -37,7 +46,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const filterButtons = document.querySelectorAll(".filter-btn");
     const tasksGrid = document.querySelector(".tasks-grid");
     let priorityFilter = 'all';
-    let statusFilter = 'all'
+    let statusFilter = 'all';
+    let searchFilter = "";
 
     filterButtons.forEach(button => {
         button.addEventListener("click",() => {
@@ -49,6 +59,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const statusDropdown = document.getElementById("task-status-filter");
+
+    taskSearchInput?.addEventListener('input', () => {
+        searchFilter = taskSearchInput.value.toLowerCase();
+        allFilters();
+    })
 
     statusDropdown.addEventListener('change',() => {
         statusFilter = statusDropdown.value;
@@ -62,23 +77,29 @@ document.addEventListener("DOMContentLoaded", () => {
             const priorityMatch = priorityFilter === 'all' || card.dataset.priority === priorityFilter;
             const badge = card.querySelector('.badge-status');
             const cardStatus = badge.textContent.toLowerCase();
+            const searchMatch = card.textContent.toLowerCase().includes(searchFilter);
+            const statusIcon = document.getElementById('status-icon');
 
             let statusMatch = false;
 
             if(statusFilter === 'all' ) {
                 statusMatch = true;
+                statusIcon.innerHTML = '&#128203;';
             }
             else if(statusFilter === 'active') {
                 statusMatch = cardStatus.includes('progress');
+                statusIcon.innerHTML = '&#8987;';
             }
             else if(statusFilter == 'pending') {
                 statusMatch = cardStatus.includes('pending');
+                statusIcon.innerHTML = '&#9201;';
             }
             else {
                 statusMatch = cardStatus.includes('completed');
+                statusIcon.innerHTML = '&#9989;';
             }
 
-            if(priorityMatch && statusMatch) {
+            if(priorityMatch && statusMatch && searchMatch) {
                 card.style.display = "";
                 visibleCount++;
             }
@@ -95,8 +116,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if(totalCards === 0){
                 placeholder.innerHTML = 'No tasks added yet &#128221;';
             }
+            else if(searchFilter != 0) {
+                placeholder.innerHTML  = 'No matching results found &#128270;'
+            }
             else {
-                placeholder.innerHTML = 'No tasks match the selected filters &#128270';
+                placeholder.innerHTML = 'No tasks match the selected filters &#128683;';
             }
         }
         else {
@@ -698,6 +722,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("cancelEdit")?.addEventListener("click", () => closeModal("editModal"));
     document.getElementById("closeModal")?.addEventListener("click", () => closeModal("editModal"));
     
+    //Edit Form
     document.getElementById("editForm").addEventListener("submit", e => {
         e.preventDefault();
 

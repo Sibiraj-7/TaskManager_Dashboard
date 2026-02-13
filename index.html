@@ -61,7 +61,7 @@
                         <div class="input-box">
                             <div class="input-wrapper">
                                 <label class="form-label-top">Priority Level *</label>
-                                <select class="form-input-normal">
+                                <select class="form-input-normal" id="priority">
                                     <option value="" selected disabled hidden>-- Select an option --</option>
                                     <option>Low Priority</option>
                                     <option>Medium Priority</option>
@@ -84,12 +84,6 @@
                         <div class="input-box">
                             <textarea placeholder="Task Description" id="taskDescription" class="form-input1 form-textarea" ></textarea>
                             <p id="description-error" class="error-message"></p>
-                        </div>
-                        <div class="input-box">
-                            <label class="form-align">Task Progress</label>
-                            <input type="range" min="0" max="100" value="0" class="progress-slider" title="Drag to change progress">
-                            <div class="progress-text">0%</div>
-                            <p id="progress-error" class="error-message"></p>
                         </div>
                         <div class="input-box">
                             <label class="form-label1">Task Type</label>
@@ -118,7 +112,7 @@
                 <section class="card active-tasks" id="tasks-section">
                     <div class="section-header">
                         <h2 class="card-title">
-                            <span class="icon" id="status-icon">&#9989</span>
+                            <span class="icon" id="status-icon">&#128203</span>
                             <select id="task-status-filter" class="status-dropdown">
                                 <option value="all">All Tasks</option>
                                 <option value="active">Active Tasks</option>
@@ -138,9 +132,36 @@
                     </div>
                 </section>
             </div>
+            <div class="profile-section hidden" id="profile-section">
+                <section class="card profile-card">
+                    <div class="profile-header">
+                        <img src="User icon.png" class="profile-icon-large" alt="Profile Photo">
+                        <h2 class="profile-name">Administrator</h2>
+                        <p class="profile-role">System Administrator</p>
+                    </div>
+                    <div class="profile-details">
+                        <div class="profile-detail-item">
+                            <span class="detail-label">EMPLOYEE ID</span>
+                            <span class="detail-value">ADM-001</span>
+                        </div>
+                        <div class="profile-detail-item">
+                            <span class="detail-label">EMAIL ADDRESS</span>
+                            <span class="detail-value">admin@e2infosystems.com</span>
+                        </div>
+                        <div class="profile-detail-item">
+                            <span class="detail-label">ORGANIZATION</span>
+                            <span class="detail-value">E2 Infosystems</span>
+                        </div>
+                        <div class="profile-stats">
+                            <div class="count-box" id="user-count">&#128100 1 Users</div>
+                            <div class="count-box" id="task-count">&#128203 0 Tasks</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
         </main>
         <footer class="footer">
-            <div class="footer-grid">
+            <div class="footer-grid" id="footer-section">
                 <div class="footer-col">
                     <h3>TaskManager</h3>
                     <p>Organize your work and life, finally.</p>
@@ -181,7 +202,7 @@
             <div class="modal modal-lg">
 
                 <div class="modal-header">
-                    <h2>Edit Task</h2>
+                    <h1>Edit Task</h1>
                     <button class="close-btn" id="closeModal">&#10006</button>
                 </div>
 
@@ -242,6 +263,7 @@
                             <label>Task Progress</label>
                             <input type="range" min="0" max="100" value="0" id="editProgress" class="progress-slider" title="Drag to change progress">
                             <div class="progress-text" id="editProgressText">0%</div>
+                            <p id="editProgressError" class="editErrorMessage"></p>
                         </div>
                         <div>
                             <label>Description</label>

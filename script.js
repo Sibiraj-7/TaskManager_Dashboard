@@ -10,36 +10,49 @@ document.addEventListener("DOMContentLoaded", () => {
     const taskSearchBar = document.getElementById('tasksSearchBar');
     const taskSearchInput = document.getElementById('taskSearchInput');
     const createTaskSection = document.getElementById('create-task-section');
-    const dashboardGrid  = document.getElementById('dashboardGrid');
-    const footerSection = document.getElementById('footer-section');
+    const dashboardGrid = document.getElementById('dashboardGrid');
+    const profileSection = document.getElementById('profile-section');
 
-    function showPage(page){
+    function showPage(page) {
 
         navLinks.forEach(link => link.classList.remove('active'));
         document.getElementById(`nav-${page}`)?.classList.add('active');
 
-        if(page === 'tasks') {
+        if (page === 'tasks') {
             pageTitle.innerHTML = '<span style = "color:#6666d7;">| </span>Tasks';
             createTaskSection?.classList.add('hidden');
             dashboardGrid?.classList.remove('hidden');
             dashboardGrid?.classList.add('tasks-only');
-            footerSection?.classList.remove('hidden');
+            profileSection?.classList.add('hidden');
             taskSearchBar?.classList.remove('hidden');
         }
-        else if(page === 'dashboard') {
-            pageTitle.innerHTML = '<span style = "color:#6666d7;">| </span>Task Dashboard';
-            createTaskSection?.classList.remove('hidden');
-            dashboardGrid?.classList.remove('tasks-only');
-            footerSection?.classList.remove('hidden');
+        else if (page === 'dashboard') {
+            pageTitle.innerHTML = '<span style="color:#6666d7;">| </span>Task Dashboard';
+            createTaskSection?.classList.remove("hidden");
+            dashboardGrid?.classList.remove("tasks-only");
+            dashboardGrid?.classList.remove('hidden');
+            profileSection?.classList.add('hidden');
             taskSearchBar?.classList.add('hidden');
         }
+        else if (page === 'profile') {
+            pageTitle.innerHTML = '<span style="color:#6666d7;">| </span>Profile';
+            createTaskSection?.classList.add("hidden");
+            dashboardGrid?.classList.add('hidden');
+            profileSection?.classList.remove('hidden');
+            taskSearchBar?.classList.add('hidden');
+            document.getElementById('user-count').innerHTML = `&#128100 Assigned Users: ${userCount()}`;
+            const cardLength = document.querySelectorAll(".tasks-grid .task-card").length;
+            document.getElementById('task-count').innerHTML = `&#128203 Assigned Tasks: ${cardLength} `
+        }
     }
-
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
-            const page = link.id.replace('nav-','');
+
+            const page = link.id.replace("nav-", "");
+
             showPage(page);
-            document.getElementById('menu-toggle').checked = false;
+
+            document.getElementById("menu-toggle").checked = false;
         });
     });
 
@@ -63,43 +76,44 @@ document.addEventListener("DOMContentLoaded", () => {
     taskSearchInput?.addEventListener('input', () => {
         searchFilter = taskSearchInput.value.toLowerCase();
         allFilters();
-    })
+    });
 
-    statusDropdown.addEventListener('change',() => {
+    statusDropdown.addEventListener('change', () => {
         statusFilter = statusDropdown.value;
         allFilters();
-    })
+        updateFilterCounts();
+    });
 
     function allFilters() {
 
         let visibleCount = 0;
         document.querySelectorAll(".tasks-grid .task-card").forEach(card => {
-            const priorityMatch = priorityFilter === 'all' || card.dataset.priority === priorityFilter;
-            const badge = card.querySelector('.badge-status');
+            const priorityMatch = priorityFilter === "all" || card.dataset.priority === priorityFilter;
+            const badge = card.querySelector(".badge-status");
             const cardStatus = badge.textContent.toLowerCase();
             const searchMatch = card.textContent.toLowerCase().includes(searchFilter);
-            const statusIcon = document.getElementById('status-icon');
+            const statusIcon = document.getElementById("status-icon");
 
             let statusMatch = false;
 
-            if(statusFilter === 'all' ) {
+            if (statusFilter === "all") {
                 statusMatch = true;
                 statusIcon.innerHTML = '&#128203;';
-            }
-            else if(statusFilter === 'active') {
-                statusMatch = cardStatus.includes('progress');
+            } 
+            else if (statusFilter === "active") {
+                statusMatch = cardStatus.includes("progress");
                 statusIcon.innerHTML = '&#8987;';
-            }
-            else if(statusFilter == 'pending') {
-                statusMatch = cardStatus.includes('pending');
+            } 
+            else if (statusFilter === "pending") {
+                statusMatch = cardStatus.includes("pending");
                 statusIcon.innerHTML = '&#9201;';
-            }
+            } 
             else {
                 statusMatch = cardStatus.includes('completed');
-                statusIcon.innerHTML = '&#9989;';
+                statusIcon.innerHTML= '&#9989;';
             }
 
-            if(priorityMatch && statusMatch && searchMatch) {
+            if(priorityMatch && statusMatch && searchMatch){
                 card.style.display = "";
                 visibleCount++;
             }
@@ -107,25 +121,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 card.style.display = "none";
             }
         });
-        const placeholder = document.getElementById('taskPlaceholder');
-        const totalCards = tasksGrid.querySelectorAll('.task-card').length;
+        const placeholder = document.getElementById("taskPlaceholder");
+        const totalCards = tasksGrid.querySelectorAll(".task-card").length;
 
-        if(visibleCount === 0) {
-            placeholder.style.display = 'flex';
+        if (visibleCount === 0) {
+            placeholder.style.display = "flex";
 
-            if(totalCards === 0){
-                placeholder.innerHTML = 'No tasks added yet &#128221;';
-            }
-            else if(searchFilter != 0) {
-                placeholder.innerHTML  = 'No matching results found &#128270;'
+            if (totalCards === 0) {
+                placeholder.innerHTML = "No tasks added yet &#128221;";
+            } 
+            else if(searchFilter != ""){
+                placeholder.innerHTML = "No matching results found &#128270;";
             }
             else {
-                placeholder.innerHTML = 'No tasks match the selected filters &#128683;';
+                placeholder.innerHTML = "No tasks match the selected filters &#128683;";
             }
-        }
+        } 
         else {
             placeholder.style.display = "none";
         }
+    }
+
+    function userCount() {
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        const unique_users = [];
+        tasks.forEach(task => {
+            const user = task.data.userName.toLowerCase();
+            if(!unique_users.includes(user)){
+                unique_users.push(user);
+            }
+        });
+        return unique_users.length;
     }
 
     function wireProgress(slider, text) {
@@ -180,14 +206,33 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateFilterCounts(){
         const allCards = document.querySelectorAll(".tasks-grid .task-card");
         const counts = {
-            all: allCards.length,
+            all: 0,
             high: 0,
             medium: 0,
             low: 0
         };
 
         allCards.forEach(card => {
-            const priority = card.dataset.priority || getPriority(card);
+            const badge = card.querySelector('.badge-status');
+            const cardStatus = badge.textContent.toLowerCase();
+
+            let statusMatch = false;
+            if (statusFilter === "all") {
+                statusMatch = true;
+            } 
+            else if (statusFilter === "active") {
+                statusMatch = cardStatus.includes("progress");
+            } 
+            else if (statusFilter === "pending") {
+                statusMatch = cardStatus.includes("pending");
+            } 
+            else {
+                statusMatch = cardStatus.includes('completed');
+            }
+            if(!statusMatch) return;
+            counts.all++;
+
+            const priority = card.dataset.priority;
             if(priority === "high") counts.high++;
             else if(priority === "medium") counts.medium++;
             else if(priority === "low") counts.low++;
@@ -197,7 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const buttonText = button.textContent.trim();
             const baseText = buttonText.split(' ')[0];
             function filterCount(baseText,type){
-                if(baseText.toLowerCase()==type){
+                if(baseText.toLowerCase() == type){
                     button.textContent = `${baseText} (${counts[type]})`;
                 }
             }
@@ -208,24 +253,24 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function clearAllError(){
+    function clearAllError() {
         document.querySelectorAll(".error-message").forEach(error => {
-            error.textContent = '';
+            error.textContent = "";
         });
     }
 
     taskForm.addEventListener('reset',clearAllError);
-    
-    function setError(id,message){
+
+    function setError(id, message) {
         document.getElementById(id).innerHTML = '&#9432 ' + message;
     }
 
-    function clearError(id){
-        document.getElementById(id).textContent = '';
+    function clearError(id) {
+        document.getElementById(id).textContent = "";
     }
 
-    const userNameBox = document.getElementById("userName");
     const taskNameBox = document.getElementById("taskName");
+    const userNameBox = document.getElementById("userName");
     const emailBox = document.getElementById("email");
     const dateBox = document.getElementById("dueDate");
     const timeBox = document.getElementById("dueTime");
@@ -253,7 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const userNameRegex = /^[A-Za-z ]+$/;
     const taskNameRegex = /^[A-Za-z0-9 ]+$/;
     const emailRegex = /^[A-Za-z0-9.]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$/;
-
+    
     let isValid = true;
     let firstError = null;
 
@@ -379,6 +424,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function progressSliderValidate(status,progress,progressError,progressBox) {
+        if(status[0].value === 'Completed' && progress < 100) {
+            setError(progressError,'Progress must be 100% when status is completed');
+            firstError ??= progressBox;
+            isValid = false;
+        }
+        else {
+            clearError(progressError);
+        }
+    }
+
     function descriptionValidate(description,descriptionError,descriptionBox){
         if(!description){
             setError(descriptionError,"Task Description is required");
@@ -437,12 +493,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function formValidation(){
-
         isValid = true;
         firstError = null;
-
-        const userName = userNameBox.value.trim();
         const taskName = taskNameBox.value.trim();
+        const userName = userNameBox.value.trim();
         const email = emailBox.value.trim();
         const date = dateBox.value.trim();
         const time = timeBox.value.trim();
@@ -493,6 +547,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const editTimeBox = document.getElementById("editTime");
     const editEstimatedHoursBox = document.getElementById("editEstimation");
     const editProjectUrlBox = document.getElementById("editProject");
+    const editProgressBox  =document.getElementById('editProgress');
     const editDescriptionBox =  document.getElementById("editDescription");
     const editPriorityBox = document.getElementById("editPriority");
 
@@ -504,6 +559,7 @@ document.addEventListener("DOMContentLoaded", () => {
     editTimeBox.addEventListener("change", () => clearError('editTimeError'));
     editEstimatedHoursBox.addEventListener("input", () => clearError('editEstimateError'));
     editProjectUrlBox.addEventListener("input", () => clearError('editProjectError'));
+    editProgressBox.addEventListener('input', () => clearError('editProgressError'));
     editDescriptionBox.addEventListener("input", () => clearError('editDescriptionError'));
     editPriorityBox.addEventListener("change", () => clearError('editPriorityError'));
     document.querySelectorAll("input[name='editTaskType']").forEach(check => {
@@ -525,6 +581,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const priority = editPriorityBox.value;
         const estimatedHours = editEstimatedHoursBox.value.trim();
         const projectUrl = editProjectUrlBox.value.trim();
+        const progress = Number(editProgressBox.value);
         const description =  editDescriptionBox.value.trim();
         const nowDatetime = new Date (`${date}T${time}`);
 
@@ -539,6 +596,7 @@ document.addEventListener("DOMContentLoaded", () => {
         priorityValidate(priority,'editPriorityError',editPriorityBox);
         estimateValidate(estimatedHours,'editEstimateError',editEstimatedHoursBox);
         projectUrlValidate(projectUrl,'editProjectError',editProjectUrlBox);
+        progressSliderValidate(status,progress,'editProgressError',editProgressBox);
         descriptionValidate(description,'editDescriptionError',editDescriptionBox);
         taskTypeValidate(taskTypes,'editTasktypeError','.task-type-modal');
         statusValidate(status,'editStatusError','.edit-status-modal');
@@ -556,7 +614,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const time = form.querySelector("#dueTime").value;
         const estimatedHours = form.querySelector("#estimatedHours").value;
         const projectUrl = form.querySelector("#projectUrl").value;
-        const priority = form.querySelector("select").value;
+        const priority = form.querySelector("#priority").value;
         const description = form.querySelector("#taskDescription").value.trim();
         const status = form.querySelector("input[name='status']:checked")?.value || "Pending";
         const progress = Number.parseInt(form.querySelector(".progress-slider")?.value ?? "0", 10) || 0;
@@ -660,16 +718,12 @@ document.addEventListener("DOMContentLoaded", () => {
         allFilters();
         showNotification("Task deleted Successfully!!");
     });
+
     document.getElementById("cancel-delete-btn").addEventListener("click", () => {
         closeModal("delete-popup");
         taskDelete = null;
     });
-    document.getElementById("delete-popup").addEventListener("click", e => {
-        if (e.target.id === "delete-popup") {
-            closeModal("delete-popup");
-        }
-    });
-    
+
     function openEditModal(card) {
         const taskId = card.dataset.id;
 
@@ -722,7 +776,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("cancelEdit")?.addEventListener("click", () => closeModal("editModal"));
     document.getElementById("closeModal")?.addEventListener("click", () => closeModal("editModal"));
     
-    //Edit Form
+    //Edit Form 
     document.getElementById("editForm").addEventListener("submit", e => {
         e.preventDefault();
 
@@ -826,23 +880,11 @@ document.addEventListener("DOMContentLoaded", () => {
             
             document.getElementById("viewDescription").textContent = data.description || "No description provided.";
         }
-        
+
         openModal("viewModal");
     }
 
     document.getElementById("closeViewModal")?.addEventListener("click", () => closeModal("viewModal"));
-    
-    document.getElementById("viewModal")?.addEventListener("click", (e) => {
-        if (e.target.id === "viewModal") {
-            closeModal("viewModal");
-        }
-    });
-    
-    document.getElementById("editModal")?.addEventListener("click", (e) => {
-        if (e.target.id === "editModal") {
-            closeModal("editModal");
-        }
-    }); 
 
     function showNotification(message) {
         const notify = document.getElementById("notification");

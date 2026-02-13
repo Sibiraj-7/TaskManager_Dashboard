@@ -171,7 +171,7 @@ body {
 .form-input {
     padding: 0.75rem;
     width:100%;
-    border: 2px solid #ef3636;
+    border: 2px solid #d1d3d7;
     border-radius: 8px;
     font-size: 0.95rem;
     transition: border-color 0.2s;
@@ -197,7 +197,7 @@ body {
     width: 100%;
     max-width: 100%;
     padding: 0.9rem 0.75rem; 
-    border:1px solid #d1d3d7;
+    border:2px solid #d1d3d7;
     border-radius: 8px;
     font-size: 0.95rem;
     transition: border-color 0.2s;
@@ -208,7 +208,7 @@ body {
 .form-input1 {
     padding: 0.75rem;
     font-family:sans-serif;
-    border: 1px solid #d1d3d7;
+    border: 2px solid #d1d3d7;
     border-radius: 8px;
     font-size: 0.95rem;
     transition: border-color 0.2s;
@@ -680,7 +680,7 @@ select.form-input {
     width: 100%;
     padding: 8px;
     border-radius: 6px;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
 }
 
 .form-grid textarea {
@@ -691,6 +691,11 @@ select.form-input {
     padding: 0;
     border: 0;
     border-radius: 0;
+}
+
+.form-grid input:focus, .form-grid select:focus{
+    outline: none;
+    border-color: #6366f1;
 }
 
 .task-type-modal,
@@ -720,7 +725,7 @@ select.form-input {
 }
 .modal-footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     gap: 12px;
     margin-top: 24px;
     padding: 32px 24px 16px 24px;
@@ -734,6 +739,7 @@ select.form-input {
     cursor: pointer;
     border: none;
     border-radius: 6px;
+    font-size: 1.2rem;
 }
 
 .btn-cancel {
@@ -742,6 +748,7 @@ select.form-input {
     cursor: pointer;
     border: none;
     border-radius: 6px;
+    font-size: 1.2rem;
 }
 
 .notification {
@@ -1164,5 +1171,15 @@ select.form-input {
 
     .detail-value {
         text-align: left;
+    }
+
+    .profile-stats {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .count-box {
+        width: 100%;
+        text-align: center;
     }
 }

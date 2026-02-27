@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("year").textContent = new Date().getFullYear();
     const datePick = document.getElementById("dueDate");
     const today = new Date();
+    datePick.value = today.toISOString().split('T')[0];
     datePick.min = today.toISOString().split('T')[0];
 
     const navLinks = document.querySelectorAll('.nav-link');
@@ -17,6 +18,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         navLinks.forEach(link => link.classList.remove('active'));
         document.getElementById(`nav-${page}`)?.classList.add('active');
+
+        if(page != 'tasks') {
+            searchFilter = "";
+            if(taskSearchInput) {
+                taskSearchInput.value = "";
+            }
+            allFilters();
+        }
 
         if (page === 'tasks') {
             pageTitle.innerHTML = '<span style = "color:#6666d7;">| </span>Tasks';
@@ -40,9 +49,9 @@ document.addEventListener("DOMContentLoaded", () => {
             dashboardGrid?.classList.add('hidden');
             profileSection?.classList.remove('hidden');
             taskSearchBar?.classList.add('hidden');
-            document.getElementById('user-count').innerHTML = `&#128100 Assigned Users: ${userCount()}`;
+            document.getElementById('user-count').innerHTML = userCount() > 1 ? `&#128100 Assigned Users: ${userCount()}` : `&#128100 Assigned User: ${userCount()}`;
             const cardLength = document.querySelectorAll(".tasks-grid .task-card").length;
-            document.getElementById('task-count').innerHTML = `&#128203 Assigned Tasks: ${cardLength} `
+            document.getElementById('task-count').innerHTML = cardLength > 1 ? `&#128203 Assigned Tasks: ${cardLength} ` : `&#128203 Assigned Task: ${cardLength} `;
         }
     }
     navLinks.forEach(link => {
@@ -106,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } 
             else if (statusFilter === "pending") {
                 statusMatch = cardStatus.includes("pending");
-                statusIcon.innerHTML = '&#9201;';
+                statusIcon.innerHTML = '&#128336;';
             } 
             else {
                 statusMatch = cardStatus.includes('completed');
@@ -192,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
         storeTask(taskData, taskId);
         allFilters();
         updateFilterCounts();
-        showNotification("Task created successfully!!");
+        showNotification("Task created successfully!!",'create');
         taskForm.reset();
         if (progressSlider) progressSlider.value = 0;
         if (progressText) progressText.textContent = "0%";
@@ -242,7 +251,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const buttonText = button.textContent.trim();
             const baseText = buttonText.split(' ')[0];
             function filterCount(baseText,type){
-                if(baseText.toLowerCase() == type){
+                if(baseText.toLowerCase() == type && counts[type] === 0){
+                    button.textContent = `${baseText}`;
+                }
+                else if(baseText.toLowerCase() == type){
                     button.textContent = `${baseText} (${counts[type]})`;
                 }
             }
@@ -258,8 +270,6 @@ document.addEventListener("DOMContentLoaded", () => {
             error.textContent = "";
         });
     }
-
-    taskForm.addEventListener('reset',clearAllError);
 
     function setError(id, message) {
         document.getElementById(id).innerHTML = '&#9432 ' + message;
@@ -298,7 +308,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const userNameRegex = /^[A-Za-z ]+$/;
     const taskNameRegex = /^[A-Za-z0-9 ]+$/;
     const emailRegex = /^[A-Za-z0-9.]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$/;
-    
+
+    const lateTaskDescription = document.getElementById('lateTaskDescription');
+    document.querySelector('.task-status').addEventListener('input', () => {
+        const statusValue = document.querySelectorAll('input[name="status"]:checked');
+        if(statusValue[0].value === 'Completed') {
+            lateTaskDescription.classList.remove('hidden');
+        }
+        else {
+            lateTaskDescription.classList.add('hidden');
+        }
+    });
+    taskForm.addEventListener('reset',() => {
+        lateTaskDescription.classList.add('hidden');
+        clearAllError();
+    });
     let isValid = true;
     let firstError = null;
 
@@ -468,9 +492,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function statusValidate(status,valueError,valueBox){
+    function statusValidate(status,progress,valueError,valueBox){
         if(status.length === 0){
             setError(valueError,"Select a Status");
+            firstError ??= document.querySelector(valueBox);
+            isValid = false;
+        }
+        else if(progress === 100 && status[0].value != 'Completed') {
+            setError(valueError,'Status must be completed when progress is 100%');
             firstError ??= document.querySelector(valueBox);
             isValid = false;
         }
@@ -529,7 +558,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         taskTypeValidate(taskTypes,'tasktype-error','.task-type');
 
-        statusValidate(status,'status-error','.task-status');
+        statusValidate(status,'','status-error','.task-status');
 
         focusIntoFirstError();
 
@@ -599,7 +628,7 @@ document.addEventListener("DOMContentLoaded", () => {
         progressSliderValidate(status,progress,'editProgressError',editProgressBox);
         descriptionValidate(description,'editDescriptionError',editDescriptionBox);
         taskTypeValidate(taskTypes,'editTasktypeError','.task-type-modal');
-        statusValidate(status,'editStatusError','.edit-status-modal');
+        statusValidate(status,progress,'editStatusError','.edit-status-modal');
         
         focusIntoFirstError();
 
@@ -716,7 +745,7 @@ document.addEventListener("DOMContentLoaded", () => {
         closeModal('delete-popup');
         updateFilterCounts();
         allFilters();
-        showNotification("Task deleted Successfully!!");
+        showNotification("Task deleted Successfully!!",'delete');
     });
 
     document.getElementById("cancel-delete-btn").addEventListener("click", () => {
@@ -810,7 +839,7 @@ document.addEventListener("DOMContentLoaded", () => {
         card.replaceWith(newCard);
         allFilters();
         updateFilterCounts();
-        showNotification("Task Edited Successfully!!"); 
+        showNotification("Task Edited Successfully!!",'edit'); 
         closeModal("editModal");
     });
 
@@ -886,12 +915,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("closeViewModal")?.addEventListener("click", () => closeModal("viewModal"));
 
-    function showNotification(message) {
+    function showNotification(message,type) {
         const notify = document.getElementById("notification");
         if (!notify) return;
 
         notify.textContent = message;
         notify.classList.add("show");
+        notify.classList.remove('create','edit','delete');
+        notify.classList.add(type);
 
         setTimeout(() => {
             notify.classList.remove("show");

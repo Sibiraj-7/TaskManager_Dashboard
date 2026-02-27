@@ -99,9 +99,13 @@
                             <div class="task-status">
                                 <div><label><input type="radio" name="status" class="task-check" value="Pending"> Pending</label></div>
                                 <div><label><input type="radio" name="status" class="task-check" value="In Progress"> In Progress</label></div>
-                                <div hidden><label><input type="radio" name="status" class="task-check" value="Completed"> Completed</label></div>
+                                <div><label><input type="radio" name="status" class="task-check" value="Completed"> Completed</label></div>
                             </div>
                             <p id="status-error" class="error-message"></p>
+                        </div>
+                        <div class="input-box">
+                            <textarea placeholder="Description" id="lateTaskDescription" class="form-input1 form-textarea hidden" ></textarea>
+                            <p id="late-description-error" class="error-message"></p>
                         </div>
                         <div class="form-buttons">
                             <button type="submit" class="create-btn">&#10003 Create Task</button>
@@ -364,7 +368,7 @@
                 <h3 id="deleteMessage"></h3>
                 <div id="boxContentFooter">
                     <button id="confirm-delete-btn" class="btn-delete">Delete</button>
-                    <button id="cancel-delete-btn" class="btn-cancel">Cancel</button>
+                    <button id="cancel-delete-btn" class="btn1-cancel">Cancel</button>
                 </div>
             </div>
         </div>
